@@ -32,9 +32,34 @@ else:
     RANKED_PATH = DEPLOY_DATA / "transformer_case_study_signals.csv"
     GRAPH_PATH = DEPLOY_DATA / "pharmaintel_transformer_case_graph.graphml.gz"
 
-st.set_page_config(page_title="PharmaIntel · Safety Intelligence", page_icon="🧬", layout="wide")
-st.title("PharmaIntel")
-st.caption("AI-powered pharmacovigilance intelligence · PubMed case study: clozapine and blood-cell events")
+st.set_page_config(page_title="PharmaIntel | Safety Intelligence", page_icon="🧬", layout="wide")
+st.markdown("""
+<style>
+:root { --blue:#BDE0FF; --yellow:#FFF2A7; --orange:#FFA500; --wine:#930031; --ink:#24151B; --muted:#715D65; --paper:#FFFCF6; }
+.stApp { background: radial-gradient(ellipse at 85% 0%, #fff2a73b 0, transparent 32%), var(--paper); color:var(--ink); }
+html, body, [class*="css"] { font-family:Inter,'Aptos',system-ui,sans-serif; }
+h1,h2,h3 { font-family:Inter,'Aptos',system-ui,sans-serif !important; letter-spacing:-.035em; color:var(--wine); }
+div[data-testid="stSidebar"] { background:linear-gradient(180deg,var(--blue),#eaf5ff 52%,#fffaf0); border-right:1px solid #d8e5ef; }
+div[data-testid="stSidebar"] p, div[data-testid="stSidebar"] label { color:var(--ink); }
+div[data-testid="stMetric"] { background:#fff; border:1px solid #eadfe1; border-radius:18px; padding:18px 18px 14px; box-shadow:0 5px 20px #3900120a; }
+div[data-testid="stMetricLabel"] { color:var(--muted); font-weight:600; }
+div[data-testid="stMetricValue"] { color:var(--wine); font-family:Inter,'Aptos',system-ui,sans-serif; }
+div[data-testid="stAlert"] { border-radius:14px; }
+div[data-testid="stVerticalBlockBorderWrapper"] > div { border-radius:18px; border-color:#eadfe1; background:#fff; }
+div.stButton > button, div.stDownloadButton > button { border-radius:12px; border:1px solid var(--wine); color:var(--wine); font-weight:700; }
+div.stButton > button:hover, div.stDownloadButton > button:hover { background:var(--wine); color:white; border-color:var(--wine); }
+[data-testid="stDataFrame"] { border:1px solid #eadfe1; border-radius:14px; overflow:hidden; }
+.hero { padding:30px 32px; border-radius:24px; margin:.5rem 0 1.25rem; color:#fff; background:linear-gradient(115deg,#930031 0%,#650021 68%,#3a1020 100%); box-shadow:0 14px 40px #93003126; }
+.hero-kicker { color:#FFF2A7; text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; }
+.hero h1 { color:white!important; margin:.45rem 0 .4rem; font-size:2.45rem; }
+.hero p { color:#fff3f6; font-size:1.02rem; margin:0; max-width:760px; }
+.eyebrow { color:var(--wine); font-size:.72rem; letter-spacing:.12em; font-weight:800; text-transform:uppercase; }
+.stCaption, [data-testid="stCaptionContainer"] { color:var(--muted); }
+</style>
+<div class="hero"><div class="hero-kicker">Pharmacovigilance intelligence · research prototype</div>
+<h1>From biomedical evidence<br>to explainable safety insight.</h1>
+<p>Traceable literature signals for clozapine and blood-cell events. Explore what the model found, inspect the source sentence, and see the limits alongside every score.</p></div>
+""", unsafe_allow_html=True)
 
 
 @st.cache_data(show_spinner=False)
@@ -69,40 +94,67 @@ if ranked.empty:
     st.info("The current corpus run produced no clozapine–blood-event candidate signals.")
     st.stop()
 
-page = st.sidebar.radio("Explore", ["Overview", "Safety signals", "Evidence explorer", "Knowledge graph", "Method & limits"])
+st.sidebar.markdown("### 🧬 PharmaIntel")
+st.sidebar.caption("AI-powered safety intelligence")
+page = st.sidebar.radio("WORKSPACE", ["Overview", "Safety signals", "Evidence explorer", "Knowledge graph", "SocialPulse", "Methods & limits"])
 st.sidebar.markdown("---")
 st.sidebar.caption(f"Model: `{summary['model']['model_id']}`\n\nRevision: `{summary['model']['model_revision'][:12]}`\n\nDevice: {summary['device'].upper()}")
 
 if page == "Overview":
     status_counts = summary["case_study_relation_status_counts"]
+    st.markdown('<div class="eyebrow">Corpus snapshot · pinned model run</div>', unsafe_allow_html=True)
     cols = st.columns(4)
-    cols[0].metric("Sentences processed", f"{summary['sentences_scanned']:,}")
-    cols[1].metric("PubMed records", f"{summary['unique_pmids_scanned']:,}")
-    cols[2].metric("Candidate relation pairs", f"{summary['case_study_pair_rows']:,}")
-    cols[3].metric("Ranked event terms", f"{summary['case_study_signal_count']:,}")
-    st.info("These are model-generated literature candidates. They are not confirmed adverse reactions or clinical causal signals.")
+    cols[0].metric("Sentences scanned", f"{summary['sentences_scanned']:,}", help="Sentence-level corpus processed by the pinned biomedical NER model.")
+    cols[1].metric("PubMed records", f"{summary['unique_pmids_scanned']:,}", help="Unique publication identifiers in the current corpus snapshot.")
+    cols[2].metric("Clozapine pairs", f"{summary['case_study_pair_rows']:,}", help="Candidate clozapine–event sentence pairs. Pairs are not causal findings.")
+    cols[3].metric("Event terms", f"{summary['case_study_signal_count']:,}", help="Terms ranked by the literature triage method.")
+    st.warning("Research triage only. A literature mention or model score is not proof that a medicine caused an adverse reaction.", icon="⚕️")
     left, right = st.columns([1.2, 1])
     with left:
         st.subheader("Highest-ranked literature candidates")
         view = ranked.head(8).copy()
         view["label"] = view["adr"].astype(str)
-        fig = go.Figure(go.Bar(x=view["priority_score"].astype(float), y=view["label"], orientation="h", marker_color="#3c78a8"))
-        fig.update_layout(height=330, yaxis={"autorange": "reversed"}, xaxis_title="Evidence triage score", margin={"l": 10, "r": 10, "t": 10, "b": 35})
+        fig = go.Figure(go.Bar(x=view["priority_score"].astype(float), y=view["label"], orientation="h", marker_color="#930031", marker_line_color="#FFF2A7", marker_line_width=1))
+        fig.update_layout(height=330, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", font={"family":"Inter, Aptos, sans-serif", "color":"#24151B"}, yaxis={"autorange": "reversed", "gridcolor":"#F1E8E8"}, xaxis_title="Evidence triage score", margin={"l": 10, "r": 10, "t": 10, "b": 35})
         st.plotly_chart(fig, width="stretch")
     with right:
         st.subheader("Extracted relation context")
         labels = ["supported", "speculative", "negated", "co_mention"]
         values = [int(status_counts.get(label, 0)) for label in labels]
-        fig = go.Figure(go.Pie(labels=labels, values=values, hole=0.55, marker_colors=["#4b9b75", "#e5a642", "#c85a54", "#9aa6b2"]))
-        fig.update_layout(height=330, margin={"l": 0, "r": 0, "t": 10, "b": 10}, legend={"orientation": "h", "y": -0.1})
+        fig = go.Figure(go.Pie(labels=labels, values=values, hole=0.62, marker_colors=["#930031", "#FFA500", "#BDE0FF", "#DDD3D7"], marker_line_color="white", marker_line_width=3))
+        fig.update_layout(height=330, paper_bgcolor="rgba(0,0,0,0)", font={"family":"Inter, Aptos, sans-serif", "color":"#24151B"}, margin={"l": 0, "r": 0, "t": 10, "b": 10}, legend={"orientation": "h", "y": -0.1})
         st.plotly_chart(fig, width="stretch")
-    st.caption(f"Precomputed CPU inference · {summary['runtime_seconds']} seconds · labels describe sentence cues, not established causality.")
+    st.caption(f"Pinned {summary['model']['model_id']} · CPU inference: {summary['runtime_seconds']} s · model labels are candidate entity classes.")
 
 elif page == "Safety signals":
-    st.subheader("Ranked case-study terms")
-    st.caption("Score = log(1 + positive unique PMIDs) × assertion consistency. Use this for literature triage only.")
+    st.subheader("Literature signal ranking")
+    st.caption("This score combines positive unique publications with assertion consistency. It is a transparent prioritization aid, not a causal probability.")
     display_cols = ["drug", "adr", "unique_pmid_count", "supported_pmid_count", "speculative_pmid_count", "negated_pmid_count", "consistency", "priority_score"]
-    st.dataframe(ranked[display_cols], hide_index=True, width="stretch")
+    st.dataframe(ranked[display_cols], hide_index=True, width="stretch", column_config={"priority_score":st.column_config.NumberColumn("Literature score", format="%.3f"), "consistency":st.column_config.ProgressColumn("Assertion consistency", format="%.0%%", min_value=0, max_value=1)})
+    st.markdown("#### Cross-source profile · clozapine–neutropenia")
+    st.markdown("FAERS EBGM and literature evidence answer different questions. The index below is an **exploratory, uncalibrated evidence summary**, not a validated confidence or risk probability.")
+    neut = ranked[ranked["adr"].astype(str).str.casefold().eq("neutropenia")]
+    if not neut.empty:
+        signal = neut.iloc[0]
+        # Assignment 2 source result: EBGM 50.81; Assignment 1 reports 929.
+        # The transforms and weights are fixed, transparent and explicitly not calibrated.
+        faers_count, ebgm = 929, 50.81
+        faers_component = ebgm / (1 + ebgm)
+        lit_component = 1 - __import__("math").exp(-float(signal["unique_pmid_count"]) / 50)
+        relation_component = float(signal["supported_pmid_count"]) / max(float(signal["unique_pmid_count"]), 1)
+        context_component = float(signal["consistency"])
+        parts = {"FAERS EBGM": faers_component, "Literature breadth": lit_component, "Supported-relation share": relation_component, "Assertion consistency": context_component}
+        weights = {"FAERS EBGM":.30, "Literature breadth":.25, "Supported-relation share":.25, "Assertion consistency":.20}
+        index = 100 * sum(parts[k] * weights[k] for k in parts)
+        left, right = st.columns([1,1.25])
+        with left:
+            st.metric("Exploratory cross-source index", f"{index:.1f} / 100", help="Weighted transformed evidence components; not validated or calibrated as a probability.")
+            st.caption(f"FAERS input: {faers_count:,} reports · EBGM {ebgm:.2f}. Source outcomes and reporting counts do not measure incidence.")
+        with right:
+            component_frame = pd.DataFrame([{"Evidence component":k, "Component score":v, "Weight":weights[k]} for k,v in parts.items()])
+            st.dataframe(component_frame, hide_index=True, width="stretch", column_config={"Component score":st.column_config.ProgressColumn(min_value=0,max_value=1,format="%.0%%"),"Weight":st.column_config.NumberColumn(format="%.0%%")})
+        st.caption("Transforms: EBGM/(1+EBGM); 1−exp(−unique PMIDs/50); supported PMIDs/unique relation PMIDs; existing assertion consistency. Weights: 30/25/25/20. The index is shown only for the exact clozapine–neutropenia pair; no unprovided FAERS values are imputed for other terms.")
+        st.warning("This hand-designed composite has not been calibrated against expert judgments or outcomes. Do not call it model confidence or use it for clinical decisions.", icon="⚠️")
     st.download_button("Download ranked signal CSV", ranked.to_csv(index=False).encode("utf-8"), "transformer_case_study_signals.csv", "text/csv")
 
 elif page == "Evidence explorer":
@@ -182,6 +234,51 @@ elif page == "Knowledge graph":
         fig.update_layout(height=650, showlegend=True, margin={"l": 5, "r": 5, "t": 10, "b": 5}, xaxis={"visible": False}, yaxis={"visible": False})
         st.plotly_chart(fig, width="stretch")
         st.caption(f"Showing {len(evidence_nodes)} evidence sentences. Hover over evidence nodes for the sentence text.")
+
+elif page == "SocialPulse":
+    st.subheader("SocialPulse · public-post research sandbox")
+    st.write("Screen an already-authorized, de-identified CSV export for clozapine and blood-cell event mentions. No social platform is queried and no content is sent to an external API.")
+    st.info("Use only public, research-permitted, de-identified data. Do not upload usernames, profile links, private messages, or direct identifiers. Post-level mentions can reflect patients, caregivers, news, or jokes; they are not verified adverse-event reports.", icon="🔒")
+    uploaded = st.file_uploader("Choose a CSV with a `text` column", type=["csv"], help="Optional columns: platform, date, post_id. Processing is session-only in this app.")
+    sample_text = st.text_area("Or paste a small de-identified sample", height=130, placeholder="Example: I started clozapine and my blood count dropped…")
+    posts = pd.DataFrame()
+    if uploaded is not None:
+        try:
+            posts = pd.read_csv(uploaded, keep_default_na=False)
+            if "text" not in posts.columns:
+                st.error("CSV needs a column named `text`.")
+                posts = pd.DataFrame()
+        except Exception as exc:
+            st.error(f"Could not read that CSV: {exc}")
+            posts = pd.DataFrame()
+    if sample_text.strip():
+        pasted = pd.DataFrame([{"text":line.strip(),"platform":"pasted sample"} for line in sample_text.splitlines() if line.strip()])
+        posts = pd.concat([posts, pasted], ignore_index=True) if not posts.empty else pasted
+    if not posts.empty:
+        import re
+        adr_patterns = {"neutropenia":r"\bneutropeni\w*\b", "agranulocytosis":r"\bagranulocytosis\b", "granulocytopenia":r"\bgranulocytopeni\w*\b", "leukopenia":r"\bleukopeni\w*\b"}
+        rel_patterns = r"\b(?:caus\w*|develop\w* after|after taking|side effect|adverse reaction|due to|trigger\w*)\b"
+        analyzed=[]
+        for _, post in posts.iterrows():
+            text=str(post.get("text", ""))
+            drug=bool(re.search(r"\bclozapine\b",text,re.I))
+            events=[term for term,pattern in adr_patterns.items() if re.search(pattern,text,re.I)]
+            relation=bool(re.search(rel_patterns,text,re.I))
+            negated=bool(re.search(r"\b(?:no|not|never|without)\b",text,re.I))
+            speculative=bool(re.search(r"\b(?:maybe|might|could|possibly|think|suspect)\b",text,re.I))
+            status="negated cue" if negated else "speculative cue" if speculative else "relation wording" if relation else "co-mention"
+            analyzed.append({"text":text,"event_candidates":", ".join(events) or "—","drug_mentioned":drug,"screening_label":status,"platform":post.get("platform","unspecified")})
+        results=pd.DataFrame(analyzed)
+        hits=results[results["drug_mentioned"] & results["event_candidates"].ne("—")]
+        m=st.columns(3);m[0].metric("Posts screened",f"{len(results):,}");m[1].metric("Drug + event mentions",f"{len(hits):,}");m[2].metric("Posts with relation wording",f"{int(hits['screening_label'].eq('relation wording').sum()):,}")
+        st.dataframe(hits if not hits.empty else results,hide_index=True,width="stretch")
+        st.download_button("Download screened rows",results.to_csv(index=False).encode("utf-8"),"socialpulse_screened_posts.csv","text/csv")
+        st.caption("Screening uses transparent keyword and cue rules. It is not trained social-media ADR detection, sentiment analysis, or validated causal classification.")
+    else:
+        st.markdown("**Input format**")
+        st.code("text,platform,date\n\"I developed neutropenia after starting clozapine\",public forum,2026-01-01",language="csv")
+    st.markdown("**What SocialPulse currently does**")
+    st.write("It provides a safe, source-separated way to prototype mention screening on authorized public data. Automated Reddit/X collection, API credentials, ethics review, deduplication, bot filtering, and human annotation are not implemented. Social data will not be mixed into PubMed or FAERS scores.")
 
 else:
     st.subheader("Model and method")
