@@ -22,9 +22,12 @@ present. `causal_conclusion` intentionally remains null.
 
 ## Current cue baseline
 
-Relation cues include association/link wording, risk wording, event-after-
-exposure wording, common onset verbs, and adverse-effect wording. Negation and
-speculation use explicit cue lists. A cue is considered local when it occurs
+Relation cues include association/link wording (including `linked to`), risk
+wording, event-after-exposure wording (including `reported with`), common onset
+verbs, and adverse-effect wording. Causal wording already includes `trigger*`,
+`resulted in`, `induced`, and `caused`. These examples are covered by the current
+baseline; adding duplicate patterns would not address the observed errors.
+Negation and speculation use explicit cue lists. A cue is considered local when it occurs
 assigned to the closest drug–ADR mention interval in a punctuation-delimited
 clause, based on distance and span length. Ties are left unassigned. Negation
 and speculation still use an 80-character window around the pair's mentions.
