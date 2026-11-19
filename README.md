@@ -16,11 +16,11 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Biomedical NLP | NER benchmark completed; BC5CDR BiomedBERT selected as the transformer baseline |
 | Drug NER | Transformer-based extraction plus an interpretable rule-based baseline |
 | ADR NER | Transformer-based adverse-event extraction plus baseline comparison |
-| Relation extraction | Implemented: transparent sentence-level rule baseline separating relation language from co-mention |
+| Relation extraction | Implemented: pair-scoped rule baseline separating relation language from co-mention |
 | Context analysis | Implemented: lexical negation/speculation cues with traceable spans; scope remains unvalidated |
 | Evaluation | Manually annotated sample, precision/recall/F1, and error analysis |
-| Signal prioritization | Transparent evidence scoring with traceable supporting sentences and PMIDs |
-| Knowledge graph | Connect drugs, adverse events, papers, and evidence relationships |
+| Signal prioritization | Implemented: unique-PMID frequency and assertion-consistency triage score |
+| Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
 | Dashboard | Streamlit and Plotly evidence explorer, evaluation views, rankings, and interactive graph |
 | SocialPulse | Optional social-media ADR mining extension, subject to data access and validation |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
@@ -98,9 +98,26 @@ This runs the target-term lexical baseline and the two shortlisted Hugging Face 
 
 The first completed benchmark and model-selection rationale are in [NER benchmark results](docs/ner_benchmark_results.md).
 
+## Relation evidence, signal ranking, and knowledge graph
+
+After PubMed retrieval, generate traceable case-study evidence, ranked signal
+counts, and a GraphML knowledge graph:
+
+```bash
+python scripts/run_corpus_intelligence.py
+```
+
+The script scans the local sentence CSV, writes the ranked aggregate to
+`results/ranked_signals.csv`, writes the evidence graph to
+`results/pharmaintel_evidence_graph.graphml`, and retains PMID-level sentence
+evidence locally under `data/processed/pubmed/`. Its score prioritizes
+literature-review candidates; it is not a probability or causal estimate. Read
+the [scoring method and limitations](docs/signal_prioritization.md) before
+interpreting ranks.
+
 ## Current implementation status
 
-The repository scaffold, package metadata, development environment, project plan, model research shortlist, PubMed corpus snapshot, annotation screen, and sample are in place. PubMed search/fetch supports journal and Bookshelf records, PMID deduplication, sentence splitting, and provenance-preserving CSV/JSONL outputs. The NER benchmark runner, target-term rule baseline, exact-span evaluator, and first model benchmark are complete. The sentence-level relation/assertion baseline and a 117-pair exploratory pilot are implemented. The pilot labels are assistant-curated first-pass annotations, not independent human gold, so its metrics are for error analysis only. Relation annotation adjudication, signal ranking, knowledge graph, and the main research dashboard remain planned work. See the [baseline methods](docs/relation_extraction_baseline.md) and [annotation pilot guide](docs/relation_annotation_guide.md).
+The repository scaffold, package metadata, development environment, project plan, model research shortlist, PubMed corpus snapshot, annotation screen, and sample are in place. PubMed search/fetch supports journal and Bookshelf records, PMID deduplication, sentence splitting, and provenance-preserving CSV/JSONL outputs. The NER benchmark runner, target-term rule baseline, exact-span evaluator, and first model benchmark are complete. The pair-scoped relation/assertion baseline, 117-pair in-sample development pilot, unique-PMID evidence score, and traceable GraphML prototype are implemented. Pilot labels are assistant-curated and the cue rules were revised using their errors, so the scores are development diagnostics rather than independent validation. Human adjudication, an independent PMID-disjoint relation evaluation, and the main research dashboard remain planned work. See the [relation methods](docs/relation_extraction_baseline.md), [annotation pilot guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
 
 ## Repository layout
 

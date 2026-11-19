@@ -11,7 +11,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from pharmaintel.relation_extraction import extract_sentence_relations  # noqa: E402
+from pharmaintel.relation_extraction import extract_sentence_relations
 
 INPUT = PROJECT_ROOT / "data/annotated/ner_annotation_sample.csv"
 OUTPUT = PROJECT_ROOT / "data/annotated/relation_annotation_sample.csv"

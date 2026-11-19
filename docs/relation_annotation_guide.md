@@ -38,11 +38,12 @@ a population estimate.
 
 The labels in the current pilot are an **assistant-curated first pass**, not
 independent human gold annotations or an adjudicated reference set. They were
-assigned from the sentence text after the baseline had been written. This
-creates annotator and development-set bias. The scores below are exploratory
-error-analysis signals only. An independent human curator must review and
-adjudicate the labels before any performance claim is used in a report or
-presentation.
+assigned after the first baseline existed, and the cue rules were then revised
+using errors in this same sample. This creates annotator and direct
+development-set bias. Current metrics are in-sample diagnostics only. An
+independent human curator must review and adjudicate labels, and a separate
+PMID-disjoint holdout must be created before any performance claim is used in a
+report or presentation.
 
 ## Reproduce
 
@@ -60,17 +61,17 @@ the metric definitions and per-stratum figures. The error table is
 
 ## Current exploratory results
 
-The rule baseline was evaluated on 107 non-unclear pair labels; 10 of 117 were
-excluded as unclear. Relation-mention detection across the two strata combined
-had precision 0.833, recall 0.506, and F1 0.629. The four-way status accuracy
-was 0.505. Keep the strata separate: random-article P/R/F1 were
-0.750/0.682/0.714 (29 pairs), and target-enriched P/R/F1 were
-0.882/0.448/0.594 (78 pairs).
+The pair-scoped rule baseline was measured on 107 non-unclear pair labels; 10
+of 117 were excluded as unclear. Relation-mention detection across both
+strata combined had precision 0.894, recall 0.663, and F1 0.761. Four-way
+status accuracy was 0.636. Keep strata separate: random-article P/R/F1 were
+0.850/0.773/0.810 (29 pairs), and target-enriched P/R/F1 were
+0.913/0.627/0.743 (78 pairs). These are post-refinement development scores,
+not held-out validation results.
 
 These values are not validated model performance because the labels are not
-independent human gold and multiple pair records share a sentence. The most
-common pilot errors were missed relation wording (33 `supported` pairs and 10
-`speculative` pairs were predicted as co-mention) and sentence-level cue spill
-(9 co-mention pairs were assigned a relation cue elsewhere in the sentence).
-This confirms that cue presence must eventually be scoped to the individual
-drug–event pair and clause.
+independent human gold and multiple pair records share a sentence. The main
+remaining errors are missed `supported` pairs (29 predicted as co-mention) and
+false relation calls on co-mentions (7 predicted as supported). Speculation
+recall on this pilot was 13/13, but only 13 examples were labeled speculative.
+These counts describe this development sample only.

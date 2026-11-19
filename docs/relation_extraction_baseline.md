@@ -9,9 +9,9 @@ Hugging Face NER pipeline. Each record retains the exact sentence, mention
 offsets, relation cue text and offsets, assertion cues, method, and a separate
 flag for explicit causal wording.
 
-The baseline reports two evidence classes:
+The baseline reports two pair-specific evidence classes:
 
-- `explicit_relation_language`: at least one relation cue occurs in the sentence.
+- `explicit_relation_language`: at least one relation cue is assigned to this pair by the nearest-span heuristic.
 - `co_mention_only`: both entities occur, but none of the current relation cues appear.
 
 Assertion context is reported separately as `affirmed_or_unmarked`, `negated`,
@@ -25,10 +25,12 @@ present. `causal_conclusion` intentionally remains null.
 Relation cues include association/link wording, risk wording, event-after-
 exposure wording, common onset verbs, and adverse-effect wording. Negation and
 speculation use explicit cue lists. A cue is considered local when it occurs
-within 80 characters of a supplied entity span. This window is a simple,
-inspectable heuristic: it can cross clause boundaries, miss long-distance
-scope, and misclassify ambiguous or reported speech. A sentence-level cue may
-also be unrelated to one of several drug–ADR pairs in that sentence.
+assigned to the closest drug–ADR mention interval in a punctuation-delimited
+clause, based on distance and span length. Ties are left unassigned. Negation
+and speculation still use an 80-character window around the pair's mentions.
+These are inspectable heuristics: they can miss coordinated event mentions,
+long-distance scope, and ambiguous or reported speech. They do not perform
+syntactic parsing.
 
 When NER spans are supplied, only mapped DRUG and ADR labels are considered.
 Otherwise, the function can use the case-study lexicon for clozapine and the
@@ -48,10 +50,9 @@ records = extract_sentence_relations(
 ## Validation required before interpretation
 
 This is a rule-based research baseline, not a validated relation model. An
-exploratory 117-pair pilot and its limitations are described in
-`docs/relation_annotation_guide.md`. The labels were assigned by an assistant
-as a first pass, so the metrics are error-analysis signals rather than
-independent human-gold performance. The next evaluation milestone is
+exploratory 117-pair development pilot and its limitations are described in
+`docs/relation_annotation_guide.md`. Its labels were assigned by an assistant
+and the cues were refined on the same sample. The next evaluation milestone is
 independent human adjudication on a PMID-disjoint sample, with random and
 target-enriched strata reported separately. Only then should a transformer
 relation model be considered, after its task, input format, labels, training

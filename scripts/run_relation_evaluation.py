@@ -10,7 +10,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from pharmaintel.evaluation.relation_metrics import evaluate_relation_rows  # noqa: E402
+from pharmaintel.evaluation.relation_metrics import evaluate_relation_rows
 
 INPUT = PROJECT_ROOT / "data/annotated/relation_annotation_sample.csv"
 METRICS_OUTPUT = PROJECT_ROOT / "results/evaluation/relation_metrics.json"

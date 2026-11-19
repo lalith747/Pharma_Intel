@@ -19,10 +19,10 @@ Can a biomedical NLP pipeline extract drug–adverse-event evidence from PubMed 
 3. **Model inventory and benchmarking (first NER benchmark complete):** the 120-row annotation set, strict exact-span evaluator, and benchmark runner were used to compare the lexical baseline, BC5CDR BiomedBERT, and Biomedical NER All. Select BC5CDR BiomedBERT as the transformer baseline; retain the lexical baseline for comparison. See `docs/ner_benchmark_results.md`. Inspect any additional candidate model's architecture, intended task, input format, output labels, license, and resource requirements before adding it.
 4. **Preprocessing:** deduplicate, preserve relevant context, split into sentences, and retain links to source abstracts.
 5. **Drug NER and ADR NER:** implement transformer-based extraction and compare with a transparent rule-based baseline.
-6. **Relation extraction and context baseline (initial implementation complete):** distinguish explicit relation wording from co-mention, preserve pair evidence and offsets, and report lexical negation/speculation cues separately. This heuristic is not validated and does not infer causality.
-7. **Evaluation (exploratory pilot complete):** a 117-pair relation sample and separate-stratum metrics are generated. Current labels are assistant-curated first pass, not independent human gold. Human adjudication and a PMID-disjoint holdout are required before reporting performance. See `docs/relation_annotation_guide.md`.
-8. **Evidence prioritization:** score evidence with documented components and preserve evidence-level provenance.
-9. **Knowledge graph:** link drugs, events, publications, sentences, and extracted relations.
+6. **Relation extraction and context baseline (development implementation complete):** pair-scoped cue assignment preserves pair evidence and offsets and reports assertion cues separately. It remains a lexical heuristic and does not infer causality.
+7. **Evaluation (development pilot complete):** 117 pair labels and separate-stratum diagnostics are generated. Labels are assistant-curated and the cue rules were revised using this sample's errors. Independent human adjudication and a PMID-disjoint holdout are required before performance claims. See `docs/relation_annotation_guide.md`.
+8. **Evidence prioritization (prototype complete):** rank the local PubMed case-study corpus using unique-PMID support and assertion consistency. The score is a triage aid, not a causal estimate. See `docs/signal_prioritization.md`.
+9. **Knowledge graph (prototype complete):** export traceable GraphML with drug, event, evidence sentence, and publication nodes.
 10. **Dashboard:** build a Streamlit + Plotly experience for model comparison, evidence inspection, evaluation, ranking, and graph exploration.
 11. **Deliverables:** notebook, ranked CSV, 2–3 page PDF report, reproducibility instructions, and GitHub repository.
 12. **Optional extension:** SocialPulse for social-media ADR mining, only after data access and model validity are addressed.
@@ -39,18 +39,17 @@ Can a biomedical NLP pipeline extract drug–adverse-event evidence from PubMed 
 ## Relation/context baseline status
 
 The current implementation is documented in `docs/relation_extraction_baseline.md`.
-It creates records only for same-sentence DRUG × ADR pairs, uses relation cue
-phrases to separate explicit relation wording from co-mention, and keeps
-negation/speculation labels and cue spans separate from relation wording. Its
-80-character cue window is a heuristic that can cross clause boundaries. No
-pair-level precision/recall/F1 has been measured yet, and a relation cue is not
-proof that the two mentions are related.
+It creates records only for same-sentence DRUG × ADR pairs, assigns relation
+cues to the closest pair interval within a clause, and keeps
+negation/speculation labels and cue spans separate from relation wording. This
+remains an unvalidated lexical heuristic, and a relation cue is not proof that
+the two mentions are related.
 
-The current exploratory evaluation uses the reviewed NER sample, so it is not
-PMID-disjoint from NER development, and pair labels were assigned by this
-assistant as a first pass. Do not present its metrics as validated performance;
-the saved error analysis is a pilot for preparing an independently adjudicated
-relation benchmark.
+The current development evaluation uses the reviewed NER sample, so it is not
+PMID-disjoint from NER development. Pair labels were assigned by this assistant
+as a first pass, and cue rules were revised from the pilot errors. Do not
+present the current metrics as held-out performance; the saved error analysis
+is a diagnostic for preparing an independently adjudicated relation benchmark.
 
 ## Assignment deliverables
 

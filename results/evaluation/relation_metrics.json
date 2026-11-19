@@ -1,5 +1,5 @@
 {
-  "evaluation_scope": "assistant-curated pilot; same sentences as the NER sample; not independent human gold",
+  "evaluation_scope": "assistant-curated in-sample development pilot; cue rules were revised using this sample's errors; not independent human gold",
   "candidate_pairs": 117,
   "unique_pmids": 59,
   "unclear_excluded_overall": 10,
@@ -8,25 +8,25 @@
     "unclear_excluded": 10,
     "relation_mention_detection": {
       "support": 107,
-      "true_positive": 45,
-      "false_positive": 9,
-      "false_negative": 44,
-      "true_negative": 9,
-      "precision": 0.8333333333333334,
-      "recall": 0.5056179775280899,
-      "f1": 0.6293706293706294
+      "true_positive": 59,
+      "false_positive": 7,
+      "false_negative": 30,
+      "true_negative": 11,
+      "precision": 0.8939393939393939,
+      "recall": 0.6629213483146067,
+      "f1": 0.7612903225806451
     },
     "four_way_status": {
       "support": 107,
-      "accuracy": 0.5046728971962616,
-      "macro_f1_over_present_classes": 0.48911952900196876,
+      "accuracy": 0.6355140186915887,
+      "macro_f1_over_present_classes": 0.6654169595667682,
       "classes": {
         "supported": {
           "support": 74,
           "predicted": 50,
-          "precision": 0.82,
-          "recall": 0.5540540540540541,
-          "f1": 0.6612903225806451
+          "precision": 0.86,
+          "recall": 0.581081081081081,
+          "f1": 0.6935483870967741
         },
         "negated": {
           "support": 2,
@@ -37,25 +37,25 @@
         },
         "speculative": {
           "support": 13,
-          "predicted": 3,
-          "precision": 1.0,
-          "recall": 0.23076923076923078,
-          "f1": 0.375
+          "predicted": 15,
+          "precision": 0.8666666666666667,
+          "recall": 1.0,
+          "f1": 0.9285714285714286
         },
         "co_mention": {
           "support": 18,
-          "predicted": 53,
-          "precision": 0.16981132075471697,
-          "recall": 0.5,
-          "f1": 0.2535211267605634
+          "predicted": 41,
+          "precision": 0.2682926829268293,
+          "recall": 0.6111111111111112,
+          "f1": 0.37288135593220345
         }
       },
       "confusion_matrix": {
         "supported": {
-          "supported": 41,
+          "supported": 43,
           "negated": 0,
-          "speculative": 0,
-          "co_mention": 33
+          "speculative": 2,
+          "co_mention": 29
         },
         "negated": {
           "supported": 0,
@@ -66,21 +66,21 @@
         "speculative": {
           "supported": 0,
           "negated": 0,
-          "speculative": 3,
-          "co_mention": 10
+          "speculative": 13,
+          "co_mention": 0
         },
         "co_mention": {
-          "supported": 9,
+          "supported": 7,
           "negated": 0,
           "speculative": 0,
-          "co_mention": 9
+          "co_mention": 11
         }
       }
     },
     "joint_status_accuracy_on_gold_relation_pairs": {
       "support": 89,
-      "correct": 45,
-      "accuracy": 0.5056179775280899
+      "correct": 57,
+      "accuracy": 0.6404494382022472
     }
   },
   "by_stratum": {
@@ -89,25 +89,25 @@
       "unclear_excluded": 4,
       "relation_mention_detection": {
         "support": 29,
-        "true_positive": 15,
-        "false_positive": 5,
-        "false_negative": 7,
-        "true_negative": 2,
-        "precision": 0.75,
-        "recall": 0.6818181818181818,
-        "f1": 0.7142857142857143
+        "true_positive": 17,
+        "false_positive": 3,
+        "false_negative": 5,
+        "true_negative": 4,
+        "precision": 0.85,
+        "recall": 0.7727272727272727,
+        "f1": 0.8095238095238095
       },
       "four_way_status": {
         "support": 29,
-        "accuracy": 0.5862068965517241,
-        "macro_f1_over_present_classes": 0.48214285714285715,
+        "accuracy": 0.7241379310344828,
+        "macro_f1_over_present_classes": 0.6547619047619048,
         "classes": {
           "supported": {
             "support": 22,
             "predicted": 20,
-            "precision": 0.75,
-            "recall": 0.6818181818181818,
-            "f1": 0.7142857142857143
+            "precision": 0.85,
+            "recall": 0.7727272727272727,
+            "f1": 0.8095238095238095
           },
           "negated": {
             "support": 0,
@@ -126,17 +126,17 @@
           "co_mention": {
             "support": 7,
             "predicted": 9,
-            "precision": 0.2222222222222222,
-            "recall": 0.2857142857142857,
-            "f1": 0.25
+            "precision": 0.4444444444444444,
+            "recall": 0.5714285714285714,
+            "f1": 0.5
           }
         },
         "confusion_matrix": {
           "supported": {
-            "supported": 15,
+            "supported": 17,
             "negated": 0,
             "speculative": 0,
-            "co_mention": 7
+            "co_mention": 5
           },
           "negated": {
             "supported": 0,
@@ -151,17 +151,17 @@
             "co_mention": 0
           },
           "co_mention": {
-            "supported": 5,
+            "supported": 3,
             "negated": 0,
             "speculative": 0,
-            "co_mention": 2
+            "co_mention": 4
           }
         }
       },
       "joint_status_accuracy_on_gold_relation_pairs": {
         "support": 22,
-        "correct": 15,
-        "accuracy": 0.6818181818181818
+        "correct": 17,
+        "accuracy": 0.7727272727272727
       }
     },
     "target_enriched": {
@@ -169,18 +169,18 @@
       "unclear_excluded": 6,
       "relation_mention_detection": {
         "support": 78,
-        "true_positive": 30,
+        "true_positive": 42,
         "false_positive": 4,
-        "false_negative": 37,
+        "false_negative": 25,
         "true_negative": 7,
-        "precision": 0.8823529411764706,
-        "recall": 0.44776119402985076,
-        "f1": 0.5940594059405941
+        "precision": 0.9130434782608695,
+        "recall": 0.6268656716417911,
+        "f1": 0.7433628318584071
       },
       "four_way_status": {
         "support": 78,
-        "accuracy": 0.47435897435897434,
-        "macro_f1_over_present_classes": 0.482589615668884,
+        "accuracy": 0.6025641025641025,
+        "macro_f1_over_present_classes": 0.6387414580125869,
         "classes": {
           "supported": {
             "support": 52,
@@ -198,25 +198,25 @@
           },
           "speculative": {
             "support": 13,
-            "predicted": 3,
-            "precision": 1.0,
-            "recall": 0.23076923076923078,
-            "f1": 0.375
+            "predicted": 15,
+            "precision": 0.8666666666666667,
+            "recall": 1.0,
+            "f1": 0.9285714285714286
           },
           "co_mention": {
             "support": 11,
-            "predicted": 44,
-            "precision": 0.1590909090909091,
+            "predicted": 32,
+            "precision": 0.21875,
             "recall": 0.6363636363636364,
-            "f1": 0.2545454545454546
+            "f1": 0.3255813953488372
           }
         },
         "confusion_matrix": {
           "supported": {
             "supported": 26,
             "negated": 0,
-            "speculative": 0,
-            "co_mention": 26
+            "speculative": 2,
+            "co_mention": 24
           },
           "negated": {
             "supported": 0,
@@ -227,8 +227,8 @@
           "speculative": {
             "supported": 0,
             "negated": 0,
-            "speculative": 3,
-            "co_mention": 10
+            "speculative": 13,
+            "co_mention": 0
           },
           "co_mention": {
             "supported": 4,
@@ -240,10 +240,10 @@
       },
       "joint_status_accuracy_on_gold_relation_pairs": {
         "support": 67,
-        "correct": 30,
-        "accuracy": 0.44776119402985076
+        "correct": 40,
+        "accuracy": 0.5970149253731343
       }
     }
   },
-  "error_count_among_non_unclear": 53
+  "error_count_among_non_unclear": 39
 }

@@ -1,0 +1,33 @@
+{
+  "source": "local PubMed sentence corpus retrieved by the project",
+  "source_file": "data/processed/pubmed/pubmed_sentences.csv",
+  "sentences_scanned": 3915,
+  "unique_pmids_scanned": 385,
+  "sentence_pair_evidence_rows": 901,
+  "unique_signal_pairs": 5,
+  "graph_node_count": 1226,
+  "graph_edge_count": 2703,
+  "verification": {
+    "ranked_pairs_unique": 5,
+    "ranked_scores_finite": true,
+    "consistency_in_range": true,
+    "graphml_round_trip": true,
+    "evidence_nodes_with_three_provenance_edges": 901
+  },
+  "relation_status_counts": {
+    "co_mention": 614,
+    "negated": 6,
+    "speculative": 52,
+    "supported": 229
+  },
+  "case_study_scope": "case-study lexicon only; clozapine aliases canonicalized; ADR surface terms preserved",
+  "relation_method": "pair-scoped lexical relation cues and assertion cues",
+  "score_formula": "log1p(unique positive PMIDs) * assertion consistency; supported=1, speculative=0.5, negated=0; mixed PMID=0.5 consistency credit",
+  "score_limitation": "triage score only; not a causal probability, effect estimate, incidence, or validated clinical signal",
+  "annotation_limitation": "relation baseline has only an assistant-curated development pilot, not independent human-gold validation",
+  "outputs": {
+    "evidence": "data/processed/pubmed/relation_evidence.csv",
+    "ranked_signals": "results/ranked_signals.csv",
+    "knowledge_graph": "results/pharmaintel_evidence_graph.graphml"
+  }
+}

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections import Counter
 from collections.abc import Iterable
 from typing import Any
 
@@ -81,7 +80,7 @@ def evaluate_relation_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
     for row in rows:
         by_stratum.setdefault(str(row["sampling_stratum"]), []).append(row)
     clear_rows = [row for row in rows if row["gold_status"] != "unclear"]
-    relation_rows = [row for row in clear_rows if row["gold_status"] in RELATION_PRESENT]
+    [row for row in clear_rows if row["gold_status"] in RELATION_PRESENT]
 
     def metrics_for(group: list[dict[str, Any]]) -> dict[str, Any]:
         labeled = [row for row in group if row["gold_status"] != "unclear"]
@@ -119,7 +118,7 @@ def evaluate_relation_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
             )
 
     return {
-        "evaluation_scope": "assistant-curated pilot; same sentences as the NER sample; not independent human gold",
+        "evaluation_scope": "assistant-curated in-sample development pilot; cue rules were revised using this sample's errors; not independent human gold",
         "candidate_pairs": len(rows),
         "unique_pmids": len({row["pmid"] for row in rows}),
         "unclear_excluded_overall": len(rows) - len(clear_rows),

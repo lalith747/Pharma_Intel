@@ -11,28 +11,27 @@ import re
 from collections.abc import Iterable
 from typing import Any
 
-
 _NEGATION_PATTERNS = (
-    re.compile(r"\bno\s+(?:significant\s+)?(?:association|relationship|evidence|link)\b", re.I),
-    re.compile(r"\bnot\s+(?:associated|related|linked|caused)\b", re.I),
-    re.compile(r"\b(?:did|does|do|was|were|is|are)\s+not\s+(?:develop|experience|cause|induce|associate)\w*\b", re.I),
-    re.compile(r"\bwithout\s+(?:evidence\s+of\s+)?(?:developing\s+)?", re.I),
-    re.compile(r"\babsence\s+of\b", re.I),
-    re.compile(r"\bno\s+(?:cases?\s+of\s+)?", re.I),
+    re.compile(r"\bno\s+(?:significant\s+)?(?:association|relationship|evidence|link)\b", re.IGNORECASE),
+    re.compile(r"\bnot\s+(?:associated|related|linked|caused)\b", re.IGNORECASE),
+    re.compile(r"\b(?:did|does|do|was|were|is|are)\s+not\s+(?:develop|experience|cause|induce|associate)\w*\b", re.IGNORECASE),
+    re.compile(r"\bwithout\s+(?:evidence\s+of\s+)?(?:developing\s+)?", re.IGNORECASE),
+    re.compile(r"\babsence\s+of\b", re.IGNORECASE),
+    re.compile(r"\bno\s+(?:cases?\s+of\s+)?", re.IGNORECASE),
 )
 
 _SPECULATION_PATTERNS = (
-    re.compile(r"\bmay\b", re.I),
-    re.compile(r"\bmight\b", re.I),
-    re.compile(r"\bcould\b", re.I),
-    re.compile(r"\bpossibly\b", re.I),
-    re.compile(r"\bpossible\b", re.I),
-    re.compile(r"\bpotential(?:ly)?\b", re.I),
-    re.compile(r"\bsuspect(?:ed|s)?\b", re.I),
-    re.compile(r"\bsuggest(?:s|ed|ing)?\b", re.I),
-    re.compile(r"\b(?:cannot|can't)\s+exclude\b", re.I),
-    re.compile(r"\b(?:appears|seems)\s+to\b", re.I),
-    re.compile(r"\blikely\b", re.I),
+    re.compile(r"\bmay\b", re.IGNORECASE),
+    re.compile(r"\bmight\b", re.IGNORECASE),
+    re.compile(r"\bcould\b", re.IGNORECASE),
+    re.compile(r"\bpossibly\b", re.IGNORECASE),
+    re.compile(r"\bpossible\b", re.IGNORECASE),
+    re.compile(r"\bpotential(?:ly)?\b", re.IGNORECASE),
+    re.compile(r"\bsuspect(?:ed|s)?\b", re.IGNORECASE),
+    re.compile(r"\bsuggest(?:s|ed|ing)?\b", re.IGNORECASE),
+    re.compile(r"\b(?:cannot|can't)\s+exclude\b", re.IGNORECASE),
+    re.compile(r"\b(?:appears|seems)\s+to\b", re.IGNORECASE),
+    re.compile(r"\blikely\b", re.IGNORECASE),
 )
 
 
