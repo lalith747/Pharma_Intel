@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -33,6 +34,10 @@ def _clozapine(value: str) -> bool:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--local-files-only", action="store_true", help="Fail unless the pinned model is already cached.")
+    parser.add_argument("--batch-size", type=int, default=16)
+    args = parser.parse_args()
     if not SENTENCES.exists():
         raise FileNotFoundError(SENTENCES)
     frame = pd.read_csv(SENTENCES, dtype={"pmid": str}, keep_default_na=False)
@@ -46,8 +51,8 @@ def main() -> None:
         print(f"NER inference: {done:,}/{total:,} sentences", flush=True)
 
     predictions, provenance = predict_entities(
-        texts, MODEL, batch_size=16, device=-1, revision=REVISION,
-        local_files_only=True, progress_callback=progress,
+        texts, MODEL, batch_size=args.batch_size, device=-1, revision=REVISION,
+        local_files_only=args.local_files_only, progress_callback=progress,
     )
     if len(predictions) != len(frame):
         raise RuntimeError("NER output count does not match corpus row count.")
@@ -125,7 +130,7 @@ def main() -> None:
         "model_label_mapping": {"Chemical": "DRUG candidate", "Disease": "ADR candidate"},
         "mapping_limit": "BC5CDR Chemical and Disease classes are broad; not every Chemical is a drug and not every Disease is an ADR.",
         "device": "cpu",
-        "offline_cache_only": True,
+        "local_files_only": args.local_files_only,
         "runtime_seconds": round(time.monotonic() - started, 2),
         "sentences_scanned": len(frame),
         "unique_pmids_scanned": int(frame["pmid"].nunique()),

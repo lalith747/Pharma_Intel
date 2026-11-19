@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import json
 import sys
 from pathlib import Path
@@ -16,10 +17,19 @@ sys.path.insert(0, str(ROOT / "src"))
 
 RESULTS = ROOT / "results"
 DATA = ROOT / "data/processed/pubmed"
+DEPLOY_DATA = ROOT / "dashboard/data"
 SUMMARY_PATH = RESULTS / "transformer_corpus_summary.json"
 EVIDENCE_PATH = DATA / "transformer_case_study_evidence.csv"
 RANKED_PATH = RESULTS / "transformer_case_study_signals.csv"
 GRAPH_PATH = RESULTS / "pharmaintel_transformer_case_graph.graphml"
+if not SUMMARY_PATH.exists():
+    SUMMARY_PATH = DEPLOY_DATA / "transformer_corpus_summary.json"
+if not EVIDENCE_PATH.exists():
+    EVIDENCE_PATH = DEPLOY_DATA / "transformer_case_study_evidence.csv.gz"
+if not RANKED_PATH.exists():
+    RANKED_PATH = DEPLOY_DATA / "transformer_case_study_signals.csv"
+if not GRAPH_PATH.exists():
+    GRAPH_PATH = DEPLOY_DATA / "pharmaintel_transformer_case_graph.graphml.gz"
 
 st.set_page_config(page_title="PharmaIntel · Safety Intelligence", page_icon="🧬", layout="wide")
 st.title("PharmaIntel")
@@ -38,12 +48,15 @@ def load_csv(path: str) -> pd.DataFrame:
 
 @st.cache_resource(show_spinner=False)
 def load_graph(path: str) -> nx.MultiDiGraph:
+    if path.endswith(".gz"):
+        with gzip.open(path, "rt", encoding="utf-8") as handle:
+            return nx.read_graphml(handle)
     return nx.read_graphml(path)
 
 
 missing = [path for path in (SUMMARY_PATH, EVIDENCE_PATH, RANKED_PATH, GRAPH_PATH) if not path.exists()]
 if missing:
-    st.warning("Run `python scripts/run_transformer_corpus_ner.py` from the project root to generate dashboard data.")
+    st.warning("Run `python scripts/run_transformer_corpus_ner.py` and `python scripts/prepare_dashboard_assets.py` to generate dashboard data.")
     st.code("\n".join(str(path.relative_to(ROOT)) for path in missing))
     st.stop()
 
@@ -179,6 +192,8 @@ else:
     st.write("A pair-scoped lexical cue baseline assigns nearby association, risk, temporal, adverse-effect, or causal wording to the closest same-clause candidate pair. Negation and speculation use lexical cues. It does not use a trained relation classifier or syntactic scope parser.")
     st.markdown("**Evaluation status**")
     st.write(summary["evaluation"])
-    st.write("A separate 60-record PMID-disjoint blinded relation review sample is prepared at `data/annotated/relation_holdout_sample.csv`. It needs human labels before held-out metrics can be calculated.")
+    st.write("A separate 60-record PMID-disjoint blinded relation review sample can be generated with `python scripts/prepare_relation_holdout.py`. It needs human labels before held-out metrics can be calculated.")
+    st.markdown("**Deployment mode**")
+    st.write("This hosted interface reads pinned, precomputed corpus outputs. Run transformer inference locally or in Colab, then refresh the packaged dashboard data. The hosted app does not perform model inference per visitor.")
     st.markdown("**Score interpretation**")
     st.write(summary["score_interpretation"])

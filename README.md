@@ -38,7 +38,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 9. Streamlit + Plotly dashboard
 10. Final notebook, CSV, report, documentation, and repository publication
 
-We will not call keyword matching a complete NLP system. Rules are a baseline to measure against; the transformer and relation-model choices remain open until their intended task and practical requirements are verified. Model confidence is not a causal probability. SocialPulse is an optional extension after the primary literature pipeline is working and evaluated.
+Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse is an optional extension after the primary literature pipeline is working and evaluated.
 
 ## Development environment
 
@@ -71,6 +71,8 @@ python -m pharmaintel.data_acquisition.pubmed --max-results 100
 ```
 
 The command writes normalized source records and retrieval metadata to `data/raw/pubmed/`, plus a records CSV and sentence-level CSV to `data/processed/pubmed/`. PMID, title, publication details, query, and retrieval time are retained so each sentence can be traced to its source. Raw and processed data directories are git-ignored. The query and result limit can be changed with `--query` and `--max-results`; PubMed's relevance ordering is the default.
+
+This acquisition step calls **NCBI PubMed E-utilities** through Biopython. Set `NCBI_EMAIL` to identify the client; `NCBI_API_KEY` is optional. The transformer runs locally with PyTorch after downloading the public, revision-pinned Hugging Face checkpoint. PharmaIntel does not use the OpenAI API or any hosted LLM inference API.
 
 The sentence splitter is a deterministic rule baseline with common abbreviation guards. It is intended to prepare reviewable sentences for later biomedical NLP, not as a validated sentence-boundary model.
 
@@ -146,6 +148,17 @@ gated evaluator can be run with `python scripts/evaluate_relation_holdout.py`.
 The resulting metrics are only independent-human validation if the annotations
 were completed by a reviewer who did not create the development labels/rules;
 the evaluator records this limitation explicitly.
+
+## Notebook and hosting
+
+The end-to-end workflow and caveats are in [`notebooks/01_pharmaintel_pipeline.ipynb`](notebooks/01_pharmaintel_pipeline.ipynb). For the hosted results explorer, first regenerate the compressed static outputs and run the app locally:
+
+```bash
+python scripts/prepare_dashboard_assets.py
+streamlit run dashboard/app.py
+```
+
+The same app can be deployed from the private GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. It loads precomputed model outputs and requires no runtime API credentials. See [hosting and API details](docs/deployment.md).
 
 ## Current implementation status
 

@@ -1,0 +1,11 @@
+{
+  "generated_by": "scripts/prepare_dashboard_assets.py",
+  "model_revision": "6eaba08f3ae3f12ba15b3ff02d41aa31705bf30f",
+  "source_files": {
+    "evidence": "data/processed/pubmed/transformer_case_study_evidence.csv",
+    "graph": "results/pharmaintel_transformer_case_graph.graphml",
+    "summary": "results/transformer_corpus_summary.json",
+    "signals": "results/transformer_case_study_signals.csv"
+  },
+  "purpose": "Precomputed public-literature outputs for the hosted Streamlit results explorer; no model weights or API credentials are included."
+}

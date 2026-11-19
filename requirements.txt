@@ -1,1 +1,4 @@
--e .[all]
+streamlit==1.65.0
+plotly==6.9.0
+networkx==3.4.2
+pandas==2.3.3
