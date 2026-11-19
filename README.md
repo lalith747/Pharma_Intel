@@ -16,8 +16,8 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Biomedical NLP | NER benchmark completed; BC5CDR BiomedBERT selected as the transformer baseline |
 | Drug NER | Transformer-based extraction plus an interpretable rule-based baseline |
 | ADR NER | Transformer-based adverse-event extraction plus baseline comparison |
-| Relation extraction | Verify a model's task, labels, inputs, and domain before using it to classify drug–ADR evidence |
-| Context analysis | Detect negation, speculation, uncertainty, and unclear co-mentions |
+| Relation extraction | Implemented: transparent sentence-level rule baseline separating relation language from co-mention |
+| Context analysis | Implemented: lexical negation/speculation cues with traceable spans; scope remains unvalidated |
 | Evaluation | Manually annotated sample, precision/recall/F1, and error analysis |
 | Signal prioritization | Transparent evidence scoring with traceable supporting sentences and PMIDs |
 | Knowledge graph | Connect drugs, adverse events, papers, and evidence relationships |
@@ -100,7 +100,7 @@ The first completed benchmark and model-selection rationale are in [NER benchmar
 
 ## Current implementation status
 
-The repository scaffold, package metadata, development environment, project plan, model research shortlist, PubMed corpus snapshot, annotation screen, and sample are in place. PubMed search/fetch supports journal and Bookshelf records, PMID deduplication, sentence splitting, and provenance-preserving CSV/JSONL outputs. The NER benchmark runner, target-term rule baseline, exact-span evaluator, and first model benchmark are complete. Relation extraction, signal ranking, knowledge graph, and main research dashboard remain planned work.
+The repository scaffold, package metadata, development environment, project plan, model research shortlist, PubMed corpus snapshot, annotation screen, and sample are in place. PubMed search/fetch supports journal and Bookshelf records, PMID deduplication, sentence splitting, and provenance-preserving CSV/JSONL outputs. The NER benchmark runner, target-term rule baseline, exact-span evaluator, and first model benchmark are complete. The sentence-level relation and assertion baseline is implemented and documented, but has not yet been quantitatively validated. Relation annotation/evaluation, signal ranking, knowledge graph, and the main research dashboard remain planned work. See [relation extraction baseline](docs/relation_extraction_baseline.md).
 
 ## Repository layout
 

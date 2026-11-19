@@ -19,14 +19,13 @@ Can a biomedical NLP pipeline extract drug–adverse-event evidence from PubMed 
 3. **Model inventory and benchmarking (first NER benchmark complete):** the 120-row annotation set, strict exact-span evaluator, and benchmark runner were used to compare the lexical baseline, BC5CDR BiomedBERT, and Biomedical NER All. Select BC5CDR BiomedBERT as the transformer baseline; retain the lexical baseline for comparison. See `docs/ner_benchmark_results.md`. Inspect any additional candidate model's architecture, intended task, input format, output labels, license, and resource requirements before adding it.
 4. **Preprocessing:** deduplicate, preserve relevant context, split into sentences, and retain links to source abstracts.
 5. **Drug NER and ADR NER:** implement transformer-based extraction and compare with a transparent rule-based baseline.
-6. **Relation extraction:** select an approach only after verifying that its task and label set fit drug–ADR relations; retain the source sentence and prediction details.
-7. **Context analysis:** detect negation, speculation, uncertainty, and unclear co-mentions, with explicit limitations.
-8. **Evaluation:** manually annotate a defined sample, calculate precision/recall/F1 where appropriate, and review false positives and false negatives.
-9. **Evidence prioritization:** score evidence with documented components and preserve evidence-level provenance.
-10. **Knowledge graph:** link drugs, events, publications, sentences, and extracted relations.
-11. **Dashboard:** build a Streamlit + Plotly experience for model comparison, evidence inspection, evaluation, ranking, and graph exploration.
-12. **Deliverables:** notebook, ranked CSV, 2–3 page PDF report, reproducibility instructions, and GitHub repository.
-13. **Optional extension:** SocialPulse for social-media ADR mining, only after data access and model validity are addressed.
+6. **Relation extraction and context baseline (initial implementation complete):** distinguish explicit relation wording from co-mention, preserve pair evidence and offsets, and report lexical negation/speculation cues separately. This heuristic is not validated and does not infer causality.
+7. **Evaluation (next):** manually annotate a defined PMID-disjoint pair sample, calculate precision/recall/F1 where appropriate, and review false positives and false negatives. Keep random and target-enriched strata separate.
+8. **Evidence prioritization:** score evidence with documented components and preserve evidence-level provenance.
+9. **Knowledge graph:** link drugs, events, publications, sentences, and extracted relations.
+10. **Dashboard:** build a Streamlit + Plotly experience for model comparison, evidence inspection, evaluation, ranking, and graph exploration.
+11. **Deliverables:** notebook, ranked CSV, 2–3 page PDF report, reproducibility instructions, and GitHub repository.
+12. **Optional extension:** SocialPulse for social-media ADR mining, only after data access and model validity are addressed.
 
 ## Scientific safeguards
 
@@ -36,6 +35,16 @@ Can a biomedical NLP pipeline extract drug–adverse-event evidence from PubMed 
 - Do not fabricate performance metrics; report evaluation only against a defined annotated sample.
 - Retain PMIDs, exact evidence sentences, model/version metadata, and scoring components.
 - Do not commit credentials, raw datasets, or private patient data.
+
+## Relation/context baseline status
+
+The current implementation is documented in `docs/relation_extraction_baseline.md`.
+It creates records only for same-sentence DRUG × ADR pairs, uses relation cue
+phrases to separate explicit relation wording from co-mention, and keeps
+negation/speculation labels and cue spans separate from relation wording. Its
+80-character cue window is a heuristic that can cross clause boundaries. No
+pair-level precision/recall/F1 has been measured yet, and a relation cue is not
+proof that the two mentions are related.
 
 ## Assignment deliverables
 
