@@ -42,22 +42,45 @@ confidence, causal probability, incidence estimate, effect size, or validated
 signal. PMIDs may also report overlapping cohorts, and the cue baseline can
 still miss or misassign relations.
 
-## Current corpus run
+## Exploratory cross-source profile
 
-The current run scanned 3,915 sentence rows from 385 PMIDs, created 901
-sentence-pair evidence records, and ranked five distinct clozapine/event terms.
-The top row is clozapine–neutropenia with 127 unique PMIDs, 125 positive
-PMIDs, two negative-only PMIDs, consistency 0.906, and score 4.379. These are
-counts from the retrieved literature snapshot and rule baseline, not clinical
-risk estimates.
+The dashboard additionally reports a 0–100 **exploratory cross-source index**
+for the exact clozapine–neutropenia pair only. It uses the Assignment 1 report
+count (929) and Assignment 2 EBGM (50.81), together with the current literature
+corpus. This is a fixed, hand-designed weighted summary; it is not a trained
+machine-learning model, a calibrated confidence estimate, an incidence rate,
+or a causal probability. It must not be interpreted clinically.
+
+| Component | Transform | Weight |
+|---|---|---:|
+| FAERS EBGM | EBGM / (1 + EBGM) | 0.30 |
+| Literature breadth | 1 − exp(−unique PMIDs / 50) | 0.25 |
+| Supported-relation share | supported PMIDs / all relation PMIDs | 0.25 |
+| Assertion consistency | current literature score consistency | 0.20 |
+
+The final index is 100 × the weighted sum. The saturation constant and weights
+are exploratory choices, not parameters estimated against expert labels or
+outcomes. No FAERS values are imputed for other ADR terms; those terms remain
+ranked by the literature-only score. A validated composite needs independent
+expert labels, a prespecified calibration/validation protocol, and uncertainty
+analysis. It is deliberately called an index, not a confidence score.
+
+## Current transformer corpus run
+
+The pinned BC5CDR model scanned 3,915 sentence rows from 385 PMIDs, created
+1,148 case-study candidate pair rows, and ranked five extracted blood-event
+terms. In the current snapshot, clozapine–neutropenia has 119 unique PMIDs,
+114 positive PMIDs, consistency 0.870, and literature score 4.127. Values can
+change when the retrieved corpus or model output changes. These counts describe
+this literature snapshot, not clinical risk.
 
 | Rank | Event term as extracted | Unique PMIDs | Positive PMIDs | Negated-only PMIDs | Consistency | Score |
 |---:|---|---:|---:|---:|---:|---:|
-| 1 | neutropenia | 127 | 125 | 2 | 0.906 | 4.379 |
-| 2 | agranulocytosis | 66 | 66 | 0 | 0.939 | 3.950 |
-| 3 | leukopenia | 10 | 10 | 0 | 0.950 | 2.278 |
+| 1 | neutropenia | 119 | 114 | 5 negated-only | 0.870 | 4.127 |
+| 2 | agranulocytosis | 65 | 65 | 0 | 0.931 | 3.900 |
+| 3 | leukopenia | 6 | 6 | 0 | 1.000 | 1.946 |
 | 4 | granulocytopenia | 4 | 4 | 0 | 1.000 | 1.609 |
-| 5 | neutropenic | 2 | 2 | 0 | 0.750 | 0.824 |
+| 5 | neutropenic | 1 | 1 | 0 | 0.500 | 0.347 |
 
 The CSV keeps component counts and its calculation method. Sentence-level
 evidence stays in the local processed-data directory and retains PMID, title,
