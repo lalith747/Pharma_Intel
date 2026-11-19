@@ -21,7 +21,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Evaluation | Manually annotated sample, precision/recall/F1, and error analysis |
 | Signal prioritization | Literature triage score plus an explicitly uncalibrated cross-source profile for clozapine–neutropenia (FAERS EBGM + literature evidence) |
 | Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
-| Dashboard | Implemented: Streamlit overview, ranked signals, evidence explorer, and interactive graph |
+| Dashboard | Implemented: modular Streamlit pages for overview, signals, evidence, graph, SocialPulse, and methods |
 | SocialPulse | Implemented as an upload/paste screening sandbox for authorized, de-identified public-post samples; no scraping or platform API |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
@@ -158,7 +158,13 @@ python scripts/prepare_dashboard_assets.py
 streamlit run dashboard/app.py
 ```
 
-The same app can be deployed from the private GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. It loads precomputed model outputs and requires no runtime API credentials. See [hosting and API details](docs/deployment.md).
+The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. It loads precomputed model outputs and requires no runtime API credentials. See [hosting and API details](docs/deployment.md).
+
+The app uses Streamlit's page navigation with page modules under
+`dashboard/pages/` and shared loading/styles in `dashboard/shared.py`. Signal
+terms display a within-corpus relative literature index; only the exact
+clozapine–neutropenia pair has the supplied FAERS values for the separate,
+exploratory cross-source profile.
 
 ## Current implementation status
 
