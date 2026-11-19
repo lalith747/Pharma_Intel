@@ -18,17 +18,18 @@ sys.path.insert(0, str(ROOT / "src"))
 RESULTS = ROOT / "results"
 DATA = ROOT / "data/processed/pubmed"
 DEPLOY_DATA = ROOT / "dashboard/data"
-SUMMARY_PATH = RESULTS / "transformer_corpus_summary.json"
-EVIDENCE_PATH = DATA / "transformer_case_study_evidence.csv"
-RANKED_PATH = RESULTS / "transformer_case_study_signals.csv"
-GRAPH_PATH = RESULTS / "pharmaintel_transformer_case_graph.graphml"
-if not SUMMARY_PATH.exists():
+# Select one complete data bundle. The hosted deployment does not contain the
+# ignored local corpus under data/processed, so it must use dashboard/data for
+# every artifact rather than mixing an older tracked results file with it.
+if (DATA / "transformer_case_study_evidence.csv").exists():
+    SUMMARY_PATH = RESULTS / "transformer_corpus_summary.json"
+    EVIDENCE_PATH = DATA / "transformer_case_study_evidence.csv"
+    RANKED_PATH = RESULTS / "transformer_case_study_signals.csv"
+    GRAPH_PATH = RESULTS / "pharmaintel_transformer_case_graph.graphml"
+else:
     SUMMARY_PATH = DEPLOY_DATA / "transformer_corpus_summary.json"
-if not EVIDENCE_PATH.exists():
     EVIDENCE_PATH = DEPLOY_DATA / "transformer_case_study_evidence.csv.gz"
-if not RANKED_PATH.exists():
     RANKED_PATH = DEPLOY_DATA / "transformer_case_study_signals.csv"
-if not GRAPH_PATH.exists():
     GRAPH_PATH = DEPLOY_DATA / "pharmaintel_transformer_case_graph.graphml.gz"
 
 st.set_page_config(page_title="PharmaIntel · Safety Intelligence", page_icon="🧬", layout="wide")
@@ -95,7 +96,7 @@ if page == "Overview":
         fig = go.Figure(go.Pie(labels=labels, values=values, hole=0.55, marker_colors=["#4b9b75", "#e5a642", "#c85a54", "#9aa6b2"]))
         fig.update_layout(height=330, margin={"l": 0, "r": 0, "t": 10, "b": 10}, legend={"orientation": "h", "y": -0.1})
         st.plotly_chart(fig, width="stretch")
-    st.caption(f"Local CPU run · {summary['runtime_seconds']} seconds · cached model inference only. Labels describe sentence cues, not established causality.")
+    st.caption(f"Precomputed CPU inference · {summary['runtime_seconds']} seconds · labels describe sentence cues, not established causality.")
 
 elif page == "Safety signals":
     st.subheader("Ranked case-study terms")
