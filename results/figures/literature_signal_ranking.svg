@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 920">
+<rect width="1500" height="920" fill="#FFFCF6"/>
+<rect x="46" y="36" width="1408" height="848" rx="28" fill="white" stroke="#E6DDE0"/>
+<text x="92" y="98" font-family="sans-serif" font-size="22" font-weight="700" fill="#930031">PHARMAINTEL / LITERATURE SIGNALS</text>
+<text x="92" y="152" font-family="sans-serif" font-size="40" font-weight="700" fill="#24151B">Clozapine · blood-cell event candidates</text>
+<text x="92" y="194" font-family="sans-serif" font-size="21" fill="#715D65">Ranked by log(1 + positive unique PMIDs) × assertion consistency</text>
+<text x="95" y="310" font-family="sans-serif" font-size="28" font-weight="700" fill="#24151B">neutropenic</text>
+<text x="95" y="342" font-family="sans-serif" font-size="17" fill="#715D65">1 positive PMIDs · 50% consistency</text>
+<rect x="520" y="282" width="850" height="46" rx="17" fill="#F3EEF0"/>
+<rect x="520" y="282" width="71" height="46" rx="17" fill="#BDE0FF"/>
+<text x="1292" y="358" font-family="sans-serif" font-size="19" font-weight="700" fill="#930031">0.35</text>
+<text x="95" y="422" font-family="sans-serif" font-size="28" font-weight="700" fill="#24151B">granulocytopenia</text>
+<text x="95" y="454" font-family="sans-serif" font-size="17" fill="#715D65">4 positive PMIDs · 100% consistency</text>
+<rect x="520" y="394" width="850" height="46" rx="17" fill="#F3EEF0"/>
+<rect x="520" y="394" width="331" height="46" rx="17" fill="#BDE0FF"/>
+<text x="1292" y="470" font-family="sans-serif" font-size="19" font-weight="700" fill="#930031">1.61</text>
+<text x="95" y="534" font-family="sans-serif" font-size="28" font-weight="700" fill="#24151B">leukopenia</text>
+<text x="95" y="566" font-family="sans-serif" font-size="17" fill="#715D65">6 positive PMIDs · 100% consistency</text>
+<rect x="520" y="506" width="850" height="46" rx="17" fill="#F3EEF0"/>
+<rect x="520" y="506" width="400" height="46" rx="17" fill="#BDE0FF"/>
+<text x="1292" y="582" font-family="sans-serif" font-size="19" font-weight="700" fill="#930031">1.95</text>
+<text x="95" y="646" font-family="sans-serif" font-size="28" font-weight="700" fill="#24151B">agranulocytosis</text>
+<text x="95" y="678" font-family="sans-serif" font-size="17" fill="#715D65">65 positive PMIDs · 93% consistency</text>
+<rect x="520" y="618" width="850" height="46" rx="17" fill="#F3EEF0"/>
+<rect x="520" y="618" width="803" height="46" rx="17" fill="#930031"/>
+<text x="1292" y="694" font-family="sans-serif" font-size="19" font-weight="700" fill="#930031">3.90</text>
+<text x="95" y="758" font-family="sans-serif" font-size="28" font-weight="700" fill="#24151B">neutropenia</text>
+<text x="95" y="790" font-family="sans-serif" font-size="17" fill="#715D65">114 positive PMIDs · 87% consistency</text>
+<rect x="520" y="730" width="850" height="46" rx="17" fill="#F3EEF0"/>
+<rect x="520" y="730" width="850" height="46" rx="17" fill="#930031"/>
+<text x="1292" y="806" font-family="sans-serif" font-size="19" font-weight="700" fill="#930031">4.13</text>
+<text x="95" y="850" font-family="sans-serif" font-size="18" fill="#715D65">Literature triage only · not incidence, clinical risk, or causal probability</text></svg>
