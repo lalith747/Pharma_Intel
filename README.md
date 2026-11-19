@@ -160,7 +160,7 @@ python scripts/prepare_dashboard_assets.py
 streamlit run dashboard/app.py
 ```
 
-The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. It loads precomputed model outputs and requires no runtime API credentials. See [hosting and API details](docs/deployment.md).
+The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. Alongside precomputed model outputs, it displays a live PubMed literature carousel refreshed through NCBI E-utilities and shared-cached for six hours. No runtime API credentials are needed. Literature mentions are not validated safety alerts. See [hosting and API details](docs/deployment.md).
 
 The app uses Streamlit's page navigation with page modules under
 `dashboard/pages/` and shared loading/styles in `dashboard/shared.py`. Signal
