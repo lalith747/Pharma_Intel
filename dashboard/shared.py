@@ -153,7 +153,7 @@ def fetch_latest_pubmed_updates() -> dict:
     params = {
         "db": "pubmed",
         "term": PUBMED_QUERY,
-        "retmax": 3,
+        "retmax": 10,
         "sort": "date_desc",
         "retmode": "json",
         "tool": "pharmaintel_dashboard",
