@@ -21,7 +21,7 @@ Deployment settings:
 The repository includes compressed, precomputed evidence, graph, and ranking
 assets under `dashboard/data/`. The hosted app does **not** download model
 weights or run transformer inference. It also displays a live PubMed literature
-banner; NCBI E-utilities responses are shared-cached server-side for six hours.
+carousel; NCBI E-utilities responses are shared-cached server-side for six hours.
 A feed outage does not prevent the saved dashboard results from loading. To
 refresh the hosted research results after a new analysis, run:
 
