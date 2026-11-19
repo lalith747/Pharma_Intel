@@ -1,0 +1,37 @@
+{
+  "model": {
+    "model_id": "Glasgow-AI4BioMed/bioner_bc5cdr",
+    "model_revision": "6eaba08f3ae3f12ba15b3ff02d41aa31705bf30f",
+    "tokenizer_class": "BertTokenizerFast",
+    "aggregation_strategy": "simple",
+    "device": "cpu",
+    "stride": "64"
+  },
+  "model_label_mapping": {
+    "Chemical": "DRUG candidate",
+    "Disease": "ADR candidate"
+  },
+  "mapping_limit": "BC5CDR Chemical and Disease classes are broad; not every Chemical is a drug and not every Disease is an ADR.",
+  "device": "cpu",
+  "offline_cache_only": true,
+  "runtime_seconds": 91.04,
+  "sentences_scanned": 3915,
+  "unique_pmids_scanned": 385,
+  "entity_counts_by_raw_label": {
+    "Chemical": 3286,
+    "Disease": 4112
+  },
+  "all_model_pair_rows": 3774,
+  "case_study_pair_rows": 1148,
+  "case_study_signal_count": 5,
+  "case_study_relation_status_counts": {
+    "co_mention": 861,
+    "negated": 10,
+    "speculative": 53,
+    "supported": 224
+  },
+  "graph_nodes": 1469,
+  "graph_edges": 3444,
+  "evaluation": "No corpus-level precision/recall/F1 reported because this corpus has no independent sentence-level NER or relation gold labels.",
+  "score_interpretation": "Literature evidence triage only; not a causal probability, effect estimate, incidence, or validated clinical signal."
+}

@@ -21,7 +21,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Evaluation | Manually annotated sample, precision/recall/F1, and error analysis |
 | Signal prioritization | Implemented: unique-PMID frequency and assertion-consistency triage score |
 | Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
-| Dashboard | Streamlit and Plotly evidence explorer, evaluation views, rankings, and interactive graph |
+| Dashboard | Implemented: Streamlit overview, ranked signals, evidence explorer, and interactive graph |
 | SocialPulse | Optional social-media ADR mining extension, subject to data access and validation |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
@@ -115,9 +115,41 @@ literature-review candidates; it is not a probability or causal estimate. Read
 the [scoring method and limitations](docs/signal_prioritization.md) before
 interpreting ranks.
 
+## Transformer corpus run and dashboard
+
+The selected BC5CDR token classifier is pinned to a model revision and can run
+offline after its Hugging Face snapshot has been cached. It scans the local
+sentence corpus and writes NER predictions, pair-level evidence, a case-study
+ranking, GraphML, and a provenance/limitations summary:
+
+```bash
+python scripts/run_transformer_corpus_ner.py
+streamlit run dashboard/app.py
+```
+
+BC5CDR outputs `Chemical` and `Disease`, not drug-specific and ADR-specific
+classes. The app retains those labels and scores and restricts the primary
+case-study ranking to clozapine and a declared blood-event term list. Corpus
+metrics are not reported without independent gold annotations.
+
+A PMID-disjoint blinded relation sample and local annotation screen are also
+available:
+
+```bash
+python scripts/prepare_relation_holdout.py
+streamlit run dashboard/relation_annotation_app.py
+```
+
+The sample has one candidate pair per PMID, excludes the development PMIDs, and
+contains no model predictions. After every row is reviewed and saved, the
+gated evaluator can be run with `python scripts/evaluate_relation_holdout.py`.
+The resulting metrics are only independent-human validation if the annotations
+were completed by a reviewer who did not create the development labels/rules;
+the evaluator records this limitation explicitly.
+
 ## Current implementation status
 
-The repository scaffold, package metadata, development environment, project plan, model research shortlist, PubMed corpus snapshot, annotation screen, and sample are in place. PubMed search/fetch supports journal and Bookshelf records, PMID deduplication, sentence splitting, and provenance-preserving CSV/JSONL outputs. The NER benchmark runner, target-term rule baseline, exact-span evaluator, and first model benchmark are complete. The pair-scoped relation/assertion baseline, 117-pair in-sample development pilot, unique-PMID evidence score, and traceable GraphML prototype are implemented. Pilot labels are assistant-curated and the cue rules were revised using their errors, so the scores are development diagnostics rather than independent validation. Human adjudication, an independent PMID-disjoint relation evaluation, and the main research dashboard remain planned work. See the [relation methods](docs/relation_extraction_baseline.md), [annotation pilot guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
+PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. A pinned BC5CDR model has now been run across the 3,915-sentence local snapshot; a Streamlit research dashboard and a separate blind relation-review workflow are available. The development pilot remains assistant-curated and in-sample. A 60-record PMID-disjoint sample is prepared, but human review is still pending, so no held-out relation metrics are yet available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation pilot guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
 
 ## Repository layout
 

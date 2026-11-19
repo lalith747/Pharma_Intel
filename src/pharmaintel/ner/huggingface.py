@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 MODEL_CANDIDATES = (
@@ -30,6 +30,8 @@ def predict_entities(
     batch_size: int = 8,
     device: int = -1,
     revision: str | None = None,
+    local_files_only: bool = False,
+    progress_callback: Callable[[int, int], None] | None = None,
 ) -> tuple[list[list[dict[str, Any]]], dict[str, str]]:
     """Run HF token classification and return per-text spans plus model provenance.
 
@@ -47,8 +49,12 @@ def predict_entities(
     except ImportError as exc:
         raise RuntimeError("Install the NLP extras and CPU/GPU PyTorch before model inference.") from exc
 
-    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision, use_fast=True)
-    model = AutoModelForTokenClassification.from_pretrained(model_id, revision=revision)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_id, revision=revision, use_fast=True, local_files_only=local_files_only
+    )
+    model = AutoModelForTokenClassification.from_pretrained(
+        model_id, revision=revision, local_files_only=local_files_only
+    )
     model.eval()
     pipe = pipeline(
         "token-classification",
@@ -83,6 +89,8 @@ def predict_entities(
                 outputs.append(
                     sorted(spans_by_key.values(), key=lambda span: (span["start"], span["end"]))
                 )
+            if progress_callback is not None:
+                progress_callback(min(start + len(batch_texts), len(texts)), len(texts))
 
     model_revision = getattr(model.config, "_commit_hash", None) or revision or "unresolved"
     provenance = {
