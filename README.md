@@ -19,10 +19,10 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Relation extraction | Implemented: pair-scoped rule baseline separating relation language from co-mention |
 | Context analysis | Implemented: lexical negation/speculation cues with traceable spans; scope remains unvalidated |
 | Evaluation | Manually annotated sample, precision/recall/F1, and error analysis |
-| Signal prioritization | Implemented: unique-PMID frequency and assertion-consistency triage score |
+| Signal prioritization | Literature triage score plus an explicitly uncalibrated cross-source profile for clozapine–neutropenia (FAERS EBGM + literature evidence) |
 | Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
 | Dashboard | Implemented: Streamlit overview, ranked signals, evidence explorer, and interactive graph |
-| SocialPulse | Optional social-media ADR mining extension, subject to data access and validation |
+| SocialPulse | Implemented as an upload/paste screening sandbox for authorized, de-identified public-post samples; no scraping or platform API |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
 ## Development sequence
@@ -38,7 +38,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 9. Streamlit + Plotly dashboard
 10. Final notebook, CSV, report, documentation, and repository publication
 
-Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse is an optional extension after the primary literature pipeline is working and evaluated.
+Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse remains source-separated from PubMed and FAERS; collection, ethics/privacy review, and human validation are required before making research claims from social posts.
 
 ## Development environment
 
@@ -151,7 +151,7 @@ the evaluator records this limitation explicitly.
 
 ## Notebook and hosting
 
-The end-to-end workflow and caveats are in [`notebooks/01_pharmaintel_pipeline.ipynb`](notebooks/01_pharmaintel_pipeline.ipynb). For the hosted results explorer, first regenerate the compressed static outputs and run the app locally:
+The self-contained, rendered seven-part assignment workflow and caveats are in [`notebooks/01_pharmaintel_pipeline.ipynb`](notebooks/01_pharmaintel_pipeline.ipynb). Saved palette-matched PNG figures are created with `python scripts/build_research_figures.py`. For the hosted results explorer, first regenerate the compressed static outputs and run the app locally:
 
 ```bash
 python scripts/prepare_dashboard_assets.py
@@ -162,7 +162,7 @@ The same app can be deployed from the private GitHub repository to Streamlit Com
 
 ## Current implementation status
 
-PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. A pinned BC5CDR model has now been run across the 3,915-sentence local snapshot; a Streamlit research dashboard and a separate blind relation-review workflow are available. The development pilot remains assistant-curated and in-sample. A 60-record PMID-disjoint sample is prepared, but human review is still pending, so no held-out relation metrics are yet available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation pilot guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
+PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, exploratory cross-source profile, and SocialPulse screening sandbox. The cross-source index is hand-designed and uncalibrated; it is not a validated confidence score. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
 
 ## Repository layout
 
