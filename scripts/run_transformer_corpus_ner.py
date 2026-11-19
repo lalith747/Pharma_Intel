@@ -33,6 +33,18 @@ def _clozapine(value: str) -> bool:
     return value.casefold().strip() in {"clozapine", "clozaril", "leponex"}
 
 
+def _source_entity(entities: list[dict[str, Any]], mention: dict[str, Any]) -> dict[str, Any]:
+    """Recover the original NER label and score for a relation mention span."""
+    return next(
+        (
+            entity for entity in entities
+            if entity.get("start") == mention.get("start")
+            and entity.get("end") == mention.get("end")
+        ),
+        {},
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--local-files-only", action="store_true", help="Fail unless the pinned model is already cached.")
@@ -74,6 +86,8 @@ def main() -> None:
         for relation in relations:
             drug_surface = relation["drug"]["text"]
             adr_surface = relation["adr"]["text"]
+            drug_prediction = _source_entity(entities, relation["drug"])
+            adr_prediction = _source_entity(entities, relation["adr"])
             relation_rows.append({
                 "pmid": str(source["pmid"]),
                 "record_type": str(source.get("record_type", "")),
@@ -85,10 +99,10 @@ def main() -> None:
                 "drug_surface": drug_surface,
                 "adr": adr_surface.casefold().strip(),
                 "adr_surface": adr_surface,
-                "drug_model_label": relation["drug"].get("source_label", ""),
-                "adr_model_label": relation["adr"].get("source_label", ""),
-                "drug_model_score": relation["drug"].get("score"),
-                "adr_model_score": relation["adr"].get("score"),
+                "drug_model_label": drug_prediction.get("source_label", ""),
+                "adr_model_label": adr_prediction.get("source_label", ""),
+                "drug_model_score": drug_prediction.get("score"),
+                "adr_model_score": adr_prediction.get("score"),
                 "evidence_sentence": text,
                 "relation_status": (
                     "co_mention" if relation["evidence_class"] == "co_mention_only"

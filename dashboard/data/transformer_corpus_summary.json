@@ -14,7 +14,7 @@
   "mapping_limit": "BC5CDR Chemical and Disease classes are broad; not every Chemical is a drug and not every Disease is an ADR.",
   "device": "cpu",
   "local_files_only": false,
-  "runtime_seconds": 93.8,
+  "runtime_seconds": 92.79,
   "sentences_scanned": 3915,
   "unique_pmids_scanned": 385,
   "entity_counts_by_raw_label": {
