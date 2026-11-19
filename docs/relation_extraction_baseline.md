@@ -47,11 +47,14 @@ records = extract_sentence_relations(
 
 ## Validation required before interpretation
 
-This is a rule-based research baseline, not a validated relation model. The
-next evaluation milestone must define pair-level labels and annotation
-guidance, create a PMID-disjoint manually reviewed sample, measure precision,
-recall and F1, and inspect false positives and false negatives. Keep random
-and target-enriched samples separate. Only then should a transformer relation
-model be considered, after its task, input format, labels, training data,
-licensing, and compute needs are verified. The ADE sentence classifier in the
-model inventory is not pair-aware and must not be substituted for this task.
+This is a rule-based research baseline, not a validated relation model. An
+exploratory 117-pair pilot and its limitations are described in
+`docs/relation_annotation_guide.md`. The labels were assigned by an assistant
+as a first pass, so the metrics are error-analysis signals rather than
+independent human-gold performance. The next evaluation milestone is
+independent human adjudication on a PMID-disjoint sample, with random and
+target-enriched strata reported separately. Only then should a transformer
+relation model be considered, after its task, input format, labels, training
+data, licensing, and compute needs are verified. The ADE sentence classifier
+in the model inventory is not pair-aware and must not be substituted for this
+task.

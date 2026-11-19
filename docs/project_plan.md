@@ -20,7 +20,7 @@ Can a biomedical NLP pipeline extract drug–adverse-event evidence from PubMed 
 4. **Preprocessing:** deduplicate, preserve relevant context, split into sentences, and retain links to source abstracts.
 5. **Drug NER and ADR NER:** implement transformer-based extraction and compare with a transparent rule-based baseline.
 6. **Relation extraction and context baseline (initial implementation complete):** distinguish explicit relation wording from co-mention, preserve pair evidence and offsets, and report lexical negation/speculation cues separately. This heuristic is not validated and does not infer causality.
-7. **Evaluation (next):** manually annotate a defined PMID-disjoint pair sample, calculate precision/recall/F1 where appropriate, and review false positives and false negatives. Keep random and target-enriched strata separate.
+7. **Evaluation (exploratory pilot complete):** a 117-pair relation sample and separate-stratum metrics are generated. Current labels are assistant-curated first pass, not independent human gold. Human adjudication and a PMID-disjoint holdout are required before reporting performance. See `docs/relation_annotation_guide.md`.
 8. **Evidence prioritization:** score evidence with documented components and preserve evidence-level provenance.
 9. **Knowledge graph:** link drugs, events, publications, sentences, and extracted relations.
 10. **Dashboard:** build a Streamlit + Plotly experience for model comparison, evidence inspection, evaluation, ranking, and graph exploration.
@@ -45,6 +45,12 @@ negation/speculation labels and cue spans separate from relation wording. Its
 80-character cue window is a heuristic that can cross clause boundaries. No
 pair-level precision/recall/F1 has been measured yet, and a relation cue is not
 proof that the two mentions are related.
+
+The current exploratory evaluation uses the reviewed NER sample, so it is not
+PMID-disjoint from NER development, and pair labels were assigned by this
+assistant as a first pass. Do not present its metrics as validated performance;
+the saved error analysis is a pilot for preparing an independently adjudicated
+relation benchmark.
 
 ## Assignment deliverables
 

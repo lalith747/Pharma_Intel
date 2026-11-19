@@ -1,0 +1,249 @@
+{
+  "evaluation_scope": "assistant-curated pilot; same sentences as the NER sample; not independent human gold",
+  "candidate_pairs": 117,
+  "unique_pmids": 59,
+  "unclear_excluded_overall": 10,
+  "descriptive_all_strata_combined": {
+    "candidate_pairs": 117,
+    "unclear_excluded": 10,
+    "relation_mention_detection": {
+      "support": 107,
+      "true_positive": 45,
+      "false_positive": 9,
+      "false_negative": 44,
+      "true_negative": 9,
+      "precision": 0.8333333333333334,
+      "recall": 0.5056179775280899,
+      "f1": 0.6293706293706294
+    },
+    "four_way_status": {
+      "support": 107,
+      "accuracy": 0.5046728971962616,
+      "macro_f1_over_present_classes": 0.48911952900196876,
+      "classes": {
+        "supported": {
+          "support": 74,
+          "predicted": 50,
+          "precision": 0.82,
+          "recall": 0.5540540540540541,
+          "f1": 0.6612903225806451
+        },
+        "negated": {
+          "support": 2,
+          "predicted": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "speculative": {
+          "support": 13,
+          "predicted": 3,
+          "precision": 1.0,
+          "recall": 0.23076923076923078,
+          "f1": 0.375
+        },
+        "co_mention": {
+          "support": 18,
+          "predicted": 53,
+          "precision": 0.16981132075471697,
+          "recall": 0.5,
+          "f1": 0.2535211267605634
+        }
+      },
+      "confusion_matrix": {
+        "supported": {
+          "supported": 41,
+          "negated": 0,
+          "speculative": 0,
+          "co_mention": 33
+        },
+        "negated": {
+          "supported": 0,
+          "negated": 1,
+          "speculative": 0,
+          "co_mention": 1
+        },
+        "speculative": {
+          "supported": 0,
+          "negated": 0,
+          "speculative": 3,
+          "co_mention": 10
+        },
+        "co_mention": {
+          "supported": 9,
+          "negated": 0,
+          "speculative": 0,
+          "co_mention": 9
+        }
+      }
+    },
+    "joint_status_accuracy_on_gold_relation_pairs": {
+      "support": 89,
+      "correct": 45,
+      "accuracy": 0.5056179775280899
+    }
+  },
+  "by_stratum": {
+    "random_article": {
+      "candidate_pairs": 33,
+      "unclear_excluded": 4,
+      "relation_mention_detection": {
+        "support": 29,
+        "true_positive": 15,
+        "false_positive": 5,
+        "false_negative": 7,
+        "true_negative": 2,
+        "precision": 0.75,
+        "recall": 0.6818181818181818,
+        "f1": 0.7142857142857143
+      },
+      "four_way_status": {
+        "support": 29,
+        "accuracy": 0.5862068965517241,
+        "macro_f1_over_present_classes": 0.48214285714285715,
+        "classes": {
+          "supported": {
+            "support": 22,
+            "predicted": 20,
+            "precision": 0.75,
+            "recall": 0.6818181818181818,
+            "f1": 0.7142857142857143
+          },
+          "negated": {
+            "support": 0,
+            "predicted": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "speculative": {
+            "support": 0,
+            "predicted": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "co_mention": {
+            "support": 7,
+            "predicted": 9,
+            "precision": 0.2222222222222222,
+            "recall": 0.2857142857142857,
+            "f1": 0.25
+          }
+        },
+        "confusion_matrix": {
+          "supported": {
+            "supported": 15,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 7
+          },
+          "negated": {
+            "supported": 0,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 0
+          },
+          "speculative": {
+            "supported": 0,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 0
+          },
+          "co_mention": {
+            "supported": 5,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 2
+          }
+        }
+      },
+      "joint_status_accuracy_on_gold_relation_pairs": {
+        "support": 22,
+        "correct": 15,
+        "accuracy": 0.6818181818181818
+      }
+    },
+    "target_enriched": {
+      "candidate_pairs": 84,
+      "unclear_excluded": 6,
+      "relation_mention_detection": {
+        "support": 78,
+        "true_positive": 30,
+        "false_positive": 4,
+        "false_negative": 37,
+        "true_negative": 7,
+        "precision": 0.8823529411764706,
+        "recall": 0.44776119402985076,
+        "f1": 0.5940594059405941
+      },
+      "four_way_status": {
+        "support": 78,
+        "accuracy": 0.47435897435897434,
+        "macro_f1_over_present_classes": 0.482589615668884,
+        "classes": {
+          "supported": {
+            "support": 52,
+            "predicted": 30,
+            "precision": 0.8666666666666667,
+            "recall": 0.5,
+            "f1": 0.6341463414634146
+          },
+          "negated": {
+            "support": 2,
+            "predicted": 1,
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666
+          },
+          "speculative": {
+            "support": 13,
+            "predicted": 3,
+            "precision": 1.0,
+            "recall": 0.23076923076923078,
+            "f1": 0.375
+          },
+          "co_mention": {
+            "support": 11,
+            "predicted": 44,
+            "precision": 0.1590909090909091,
+            "recall": 0.6363636363636364,
+            "f1": 0.2545454545454546
+          }
+        },
+        "confusion_matrix": {
+          "supported": {
+            "supported": 26,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 26
+          },
+          "negated": {
+            "supported": 0,
+            "negated": 1,
+            "speculative": 0,
+            "co_mention": 1
+          },
+          "speculative": {
+            "supported": 0,
+            "negated": 0,
+            "speculative": 3,
+            "co_mention": 10
+          },
+          "co_mention": {
+            "supported": 4,
+            "negated": 0,
+            "speculative": 0,
+            "co_mention": 7
+          }
+        }
+      },
+      "joint_status_accuracy_on_gold_relation_pairs": {
+        "support": 67,
+        "correct": 30,
+        "accuracy": 0.44776119402985076
+      }
+    }
+  },
+  "error_count_among_non_unclear": 53
+}
