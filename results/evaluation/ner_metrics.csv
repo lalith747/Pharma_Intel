@@ -1,0 +1,13 @@
+model_id,sampling_stratum,label,sample_rows,support,predicted,true_positive,false_positive,false_negative,precision,recall,f1
+Glasgow-AI4BioMed/bioner_bc5cdr,random_article,ADR,80,44,72,34,38,10,0.4722222222222222,0.7727272727272727,0.5862068965517242
+Glasgow-AI4BioMed/bioner_bc5cdr,random_article,DRUG,80,58,67,58,9,0,0.8656716417910447,1.0,0.928
+Glasgow-AI4BioMed/bioner_bc5cdr,target_enriched,ADR,40,61,73,60,13,1,0.821917808219178,0.9836065573770492,0.8955223880597014
+Glasgow-AI4BioMed/bioner_bc5cdr,target_enriched,DRUG,40,47,47,47,0,0,1.0,1.0,1.0
+d4data/biomedical-ner-all,random_article,ADR,80,44,91,7,84,37,0.07692307692307693,0.1590909090909091,0.1037037037037037
+d4data/biomedical-ner-all,random_article,DRUG,80,58,90,18,72,40,0.2,0.3103448275862069,0.24324324324324326
+d4data/biomedical-ner-all,target_enriched,ADR,40,61,94,9,85,52,0.09574468085106383,0.14754098360655737,0.11612903225806451
+d4data/biomedical-ner-all,target_enriched,DRUG,40,47,66,9,57,38,0.13636363636363635,0.19148936170212766,0.15929203539823006
+pharmaintel/case-study-lexical-baseline,random_article,ADR,80,44,31,26,5,18,0.8387096774193549,0.5909090909090909,0.6933333333333334
+pharmaintel/case-study-lexical-baseline,random_article,DRUG,80,58,36,36,0,22,1.0,0.6206896551724138,0.7659574468085107
+pharmaintel/case-study-lexical-baseline,target_enriched,ADR,40,61,44,42,2,19,0.9545454545454546,0.6885245901639344,0.8
+pharmaintel/case-study-lexical-baseline,target_enriched,DRUG,40,47,36,36,0,11,1.0,0.7659574468085106,0.8674698795180723

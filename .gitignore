@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local datasets and generated results
+# Keep directory structure with .gitkeep files; never commit source datasets.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/annotated/*
+!data/annotated/.gitkeep
+results/*.csv
+results/*.parquet
+results/*.json
+results/figures/*
+!results/figures/.gitkeep
+results/evaluation/*
+!results/evaluation/.gitkeep
+
+# Model weights and caches
+models/
+.cache/
+.huggingface/
+transformers_cache/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/

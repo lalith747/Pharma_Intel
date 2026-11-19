@@ -1,0 +1,32 @@
+{
+  "python_version": "3.10.12",
+  "transformers_version": "4.57.6",
+  "torch_version": "2.14.1+cpu",
+  "metrics": "strict exact-span P/R/F1, split by sampling stratum and entity type",
+  "confidence_interpretation": "model score only; not causal probability",
+  "models": [
+    {
+      "model_id": "pharmaintel/case-study-lexical-baseline",
+      "model_revision": "lexicon-v1",
+      "notes": "Target aliases only; not a general biomedical NER baseline."
+    },
+    {
+      "model_id": "Glasgow-AI4BioMed/bioner_bc5cdr",
+      "model_revision": "6eaba08f3ae3f12ba15b3ff02d41aa31705bf30f",
+      "tokenizer_class": "BertTokenizerFast",
+      "aggregation_strategy": "simple",
+      "device": "cpu",
+      "stride": "64",
+      "notes": "Confidence is a model score, not a probability of a true or causal relation."
+    },
+    {
+      "model_id": "d4data/biomedical-ner-all",
+      "model_revision": "015a4050c9ac99722e61c547aa9b4282bcbedc7f",
+      "tokenizer_class": "DistilBertTokenizerFast",
+      "aggregation_strategy": "simple",
+      "device": "cpu",
+      "stride": "64",
+      "notes": "Confidence is a model score, not a probability of a true or causal relation."
+    }
+  ]
+}
