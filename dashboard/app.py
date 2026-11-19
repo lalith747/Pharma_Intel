@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import streamlit as st
 
+from dashboard.shared import render_live_pubmed_banner
+
 st.set_page_config(page_title="PharmaIntel | Safety Intelligence", page_icon="🧬", layout="wide")
 st.markdown(
     """
@@ -44,6 +46,7 @@ pages = [
     st.Page("pages/socialpulse.py", title="SocialPulse", icon="📣"),
     st.Page("pages/methods.py", title="Methods & limits", icon="📘"),
 ]
+render_live_pubmed_banner()
 nav = st.navigation(pages, position="sidebar")
 st.sidebar.markdown("### 🧬 PharmaIntel")
 st.sidebar.caption("AI-powered safety intelligence")
