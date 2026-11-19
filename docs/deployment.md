@@ -20,9 +20,10 @@ Deployment settings:
 
 The repository includes compressed, precomputed evidence, graph, and ranking
 assets under `dashboard/data/`. The hosted app does **not** download model
-weights, run transformer inference, or call PubMed for each visitor. This keeps
-startup and request times predictable. To refresh the hosted results after a
-new analysis, run:
+weights or run transformer inference. It also displays a live PubMed literature
+banner; NCBI E-utilities responses are shared-cached server-side for six hours.
+A feed outage does not prevent the saved dashboard results from loading. To
+refresh the hosted research results after a new analysis, run:
 
 ```bash
 python scripts/run_transformer_corpus_ner.py
@@ -48,10 +49,14 @@ deployment for the current project.
 |---|---|---|
 | PubMed retrieval | Yes: NCBI E-utilities via Biopython, during data acquisition | Set `NCBI_EMAIL`; `NCBI_API_KEY` is optional |
 | Biomedical model | Public Hugging Face Hub download of the pinned checkpoint when not cached; inference is local PyTorch | No token for this public model |
-| Hosted dashboard | Reads precomputed local repository assets; no per-visitor external API calls | None |
+| Hosted dashboard | Reads precomputed assets and fetches a small PubMed update feed through NCBI E-utilities, with a shared six-hour cache | None |
 | OpenAI/LLM service | Not used | None |
 | GitHub | Repository hosting and source control | GitHub login for maintainers/deployment |
 
-Never put NCBI keys, GitHub tokens, or other secrets in source control. If live
-PubMed search is later added to the hosted app, rate limits, caching, and
-server-side secret handling must be added first.
+The live banner sends only general clozapine/blood-cell search terms to NCBI;
+it does not transmit user input. It requests up to three recent matching
+records and shows publication details, abstract text, and PubMed links. Recent
+PubMed entry ordering is distinct from publication date. A keyword match is a
+literature reference, not a validated safety signal or evidence of causality.
+No API key or user-specific identifier is required for this small feed. Never
+put NCBI keys, GitHub tokens, or other secrets in source control.
