@@ -151,6 +151,8 @@ the evaluator records this limitation explicitly.
 
 ## Notebook and hosting
 
+**Live dashboard:** [PharmaIntel Safety Intelligence](https://pharmaintel.streamlit.app/)
+
 The self-contained, rendered seven-part assignment workflow and caveats are in [`notebooks/01_pharmaintel_pipeline.ipynb`](notebooks/01_pharmaintel_pipeline.ipynb). Saved palette-matched PNG figures are created with `python scripts/build_research_figures.py`. For the hosted results explorer, first regenerate the compressed static outputs and run the app locally:
 
 ```bash
