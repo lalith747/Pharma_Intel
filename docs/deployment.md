@@ -53,8 +53,8 @@ deployment for the current project.
 | OpenAI/LLM service | Not used | None |
 | GitHub | Repository hosting and source control | GitHub login for maintainers/deployment |
 
-The live banner sends only general clozapine/blood-cell search terms to NCBI;
-it does not transmit user input. It requests up to three recent matching
+The live carousel sends only general clozapine/blood-cell search terms to NCBI;
+it does not transmit user input. It requests up to ten recent matching
 records and shows publication details, abstract text, and PubMed links. Recent
 PubMed entry ordering is distinct from publication date. A keyword match is a
 literature reference, not a validated safety signal or evidence of causality.
