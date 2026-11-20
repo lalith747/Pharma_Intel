@@ -12,104 +12,63 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from dashboard.shared import load_dashboard_data, render_sidebar_metadata
-from dashboard.social_feed import MAX_RECORDS, NEWS_QUERIES, TIMESPANS, fetch_public_news
+from dashboard.social_feed import FDA_SAFETY_PAGE, fetch_fda_clozapine_safety
 
 summary, evidence, ranked, graph = load_dashboard_data()
 render_sidebar_metadata(summary)
 
-st.markdown('<div class="eyebrow">SOCIALPULSE · PUBLIC NEWS</div>', unsafe_allow_html=True)
-st.title("Clozapine news pulse")
+st.markdown('<div class="eyebrow">SOCIALPULSE · OFFICIAL SAFETY NEWS</div>', unsafe_allow_html=True)
+st.title("Clozapine safety updates")
 st.write(
-    "Browse recent public news mentioning clozapine, with a focused view for blood-cell safety coverage."
+    "Browse FDA safety communications that mention clozapine or Clozaril. The PubMed literature carousel remains available on the Overview page."
 )
 st.info(
-    "Free, no sign-in or API key. X/Twitter posts are not included: the official X API charges for post reads. This feed uses GDELT-indexed news and does not claim to capture every article or social post.",
+    "This uses the FDA’s public safety communication archive—no sign-in, API key, or payment. X/Twitter posts are not included because official API reads are paid. This is an official-notice feed, not a complete social-media or general-news archive.",
     icon="📰",
 )
 
-filters = st.columns([1.4, 1, 0.7])
-with filters[0]:
-    topic = st.selectbox("Coverage", list(NEWS_QUERIES))
-with filters[1]:
-    period = st.selectbox("Published within", list(TIMESPANS))
-with filters[2]:
-    st.write("")
-    st.write("")
-    refresh = st.button("Refresh feed", use_container_width=True)
-
-if refresh:
-    fetch_public_news.clear()
+if st.button("Refresh FDA notices"):
+    fetch_fda_clozapine_safety.clear()
     st.rerun()
 
-active_filters = (topic, TIMESPANS[period])
-if st.session_state.get("socialpulse_filters") != active_filters:
-    st.session_state.socialpulse_filters = active_filters
-    st.session_state.socialpulse_page = 0
-
 try:
-    feed = fetch_public_news(topic, TIMESPANS[period])
+    feed = fetch_fda_clozapine_safety()
 except (requests.RequestException, ValueError) as exc:
     st.warning(
-        "The public news service could not be reached. Try Refresh feed in a little while; the rest of PharmaIntel is still available."
+        "The FDA safety archive could not be reached. Try Refresh FDA notices in a little while; the rest of PharmaIntel is still available."
     )
     st.caption(f"Feed status: {type(exc).__name__}")
 else:
     articles = feed["articles"]
-    metric_cols = st.columns(3)
-    metric_cols[0].metric("Articles returned", f"{len(articles):,}")
-    metric_cols[1].metric("Search window", period)
-    metric_cols[2].metric("Source request cap", f"{MAX_RECORDS}")
+    metric_cols = st.columns(2)
+    metric_cols[0].metric("Clozapine notices found", f"{len(articles):,}")
+    metric_cols[1].metric("Source", "FDA")
     st.caption(
-        f"GDELT DOC · retrieved {feed['retrieved_at']} · refreshes automatically every six hours. "
-        "GDELT searches monitored online news from the past three months; this page requests at most 250 results."
+        f"Checked {feed['retrieved_at']} · cached for six hours · "
+        + "matched by clozapine/Clozaril in the FDA archive entry title."
     )
 
     if not articles:
-        st.info("No matching news articles were returned for these filters.")
+        st.info(
+            "No clozapine-related FDA communications were found in the current archive listing."
+        )
     else:
-        page_size = 20
-        page_count = (len(articles) + page_size - 1) // page_size
-        page = min(st.session_state.socialpulse_page, page_count - 1)
-        first = page * page_size
-        last = min(first + page_size, len(articles))
-        before, count, after = st.columns([1, 5, 1])
-        with before:
-            if st.button("← Previous", disabled=page == 0, key="socialpulse-prev"):
-                st.session_state.socialpulse_page -= 1
-                st.rerun()
-        with count:
-            st.caption(
-                f"ARTICLES {first + 1}–{last} OF {len(articles)} · PAGE {page + 1}/{page_count}"
-            )
-        with after:
-            if st.button("Next →", disabled=page >= page_count - 1, key="socialpulse-next"):
-                st.session_state.socialpulse_page += 1
-                st.rerun()
-
-        for index, article in enumerate(articles[first:last], start=first + 1):
+        for index, article in enumerate(articles, start=1):
             with st.container(border=True):
                 st.caption(
-                    html.escape(
-                        f"{index:03d}  ·  {article['published']}  ·  "
-                        f"{article['domain'] or article['source_country'] or 'News source'}"
-                    )
+                    html.escape(f"FDA SAFETY COMMUNICATION  ·  {article['date']}  ·  {index:02d}")
                 )
                 st.markdown(f"### {html.escape(article['title'])}", unsafe_allow_html=True)
-                st.link_button(
-                    "Open publisher article ↗", article["url"], key=f"news-{index}-{page}"
-                )
-        if len(articles) == MAX_RECORDS:
-            st.caption(
-                "The feed reached GDELT's 250-result request cap. Narrow the date window to browse a smaller slice; this count may be truncated."
-            )
+                st.link_button("Open FDA notice ↗", article["url"], key=f"fda-notice-{index}")
         st.caption(
-            "GDELT returns article metadata and links, not full article text. Search matches are leads for human review—not verified ADR reports or evidence of causality."
+            "This page only lists communications present in the FDA archive and matching the drug name in their titles. It does not establish that an adverse event was caused by clozapine."
         )
+    st.link_button("Browse the full FDA Drug Safety Communications archive ↗", FDA_SAFETY_PAGE)
 
 
 with st.expander("Advanced: screen an authorized CSV or text sample"):
     st.caption(
-        "Optional local keyword screening. Uploaded rows stay within this app session and are not sent to the news search service."
+        "Optional local keyword screening. Uploaded rows stay within this app session and are not sent to the FDA notice feed."
     )
     uploaded = st.file_uploader(
         "CSV with a `text` column", type=["csv"], help="Optional columns: platform, date, post_id."
