@@ -49,15 +49,10 @@ deployment for the current project.
 |---|---|---|
 | PubMed retrieval | Yes: NCBI E-utilities via Biopython, during data acquisition | Set `NCBI_EMAIL`; `NCBI_API_KEY` is optional |
 | Biomedical model | Public Hugging Face Hub download of the pinned checkpoint when not cached; inference is local PyTorch | No token for this public model |
-| Hosted dashboard | Reads precomputed assets and fetches cached PubMed and GDELT public-news feeds | None |
+| Hosted dashboard | Reads precomputed assets, NCBI PubMed updates, and the public FDA Drug Safety Communications page | None |
 | OpenAI/LLM service | Not used | None |
 | GitHub | Repository hosting and source control | GitHub login for maintainers/deployment |
 
-The PubMed carousel sends only general clozapine/blood-cell search terms to NCBI. SocialPulse sends only its fixed clozapine news query to GDELT. Neither feed transmits user input. The PubMed carousel requests up to ten recent matching records. The GDELT
-news feed is free, uses no API key, searches up to the previous three months,
-and requests up to 250 article records. Results can be incomplete because
-GDELT coverage is not exhaustive and the per-request cap may truncate a busy
-query. PubMed entry ordering is distinct from publication date. News items and
-search matches are leads for review, not validated safety signals or proof of
-causality. PharmaIntel does not call the paid X API or scrape X. Never
+The PubMed carousel sends only general clozapine/blood-cell search terms to NCBI. SocialPulse reads the public FDA Drug Safety Communications archive and filters its titles for clozapine/Clozaril. Neither feed transmits user input. Results are shared-cached for six hours. The FDA page contains its current archive listing and links to older archived communications. This source is official safety communication, not general news or individual adverse-event reports. PharmaIntel does not call the paid X API or scrape X.
+Never
 put NCBI keys, GitHub tokens, or other secrets in source control.
