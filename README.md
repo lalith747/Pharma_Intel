@@ -22,7 +22,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Signal prioritization | Literature triage score plus an explicitly uncalibrated cross-source profile for clozapine–neutropenia (FAERS EBGM + literature evidence) |
 | Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
 | Dashboard | Implemented: modular Streamlit pages for overview, signals, evidence, graph, SocialPulse, and methods |
-| SocialPulse | Implemented as an upload/paste screening sandbox for authorized, de-identified public-post samples; no scraping or platform API |
+| SocialPulse | Free GDELT public-news feed for clozapine coverage and blood-cell safety, with a six-hour shared cache and optional local sample screening; no scraping or paid X API |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
 ## Development sequence
@@ -38,7 +38,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 9. Streamlit + Plotly dashboard
 10. Final notebook, CSV, report, documentation, and repository publication
 
-Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse remains source-separated from PubMed and FAERS; collection, ethics/privacy review, and human validation are required before making research claims from social posts.
+Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse news remains source-separated from PubMed and FAERS. Its GDELT feed covers up to three months and 250 records per request; coverage is not exhaustive. The official X API is not used because post reads are pay-per-use. Optional user-supplied social samples require permitted access, de-identification, and human validation before research claims.
 
 ## Development environment
 
@@ -160,7 +160,7 @@ python scripts/prepare_dashboard_assets.py
 streamlit run dashboard/app.py
 ```
 
-The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. Alongside precomputed model outputs, it displays a live PubMed literature carousel refreshed through NCBI E-utilities and shared-cached for six hours. No runtime API credentials are needed. Literature mentions are not validated safety alerts. See [hosting and API details](docs/deployment.md).
+The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. Alongside precomputed model outputs, it displays a live PubMed literature carousel refreshed through NCBI E-utilities and shared-cached for six hours. SocialPulse includes a free GDELT public-news feed with the same cache interval; neither feed needs runtime API credentials. These are literature/news references, not validated safety alerts. See [hosting and API details](docs/deployment.md).
 
 The app uses Streamlit's page navigation with page modules under
 `dashboard/pages/` and shared loading/styles in `dashboard/shared.py`. Signal
@@ -170,7 +170,7 @@ exploratory cross-source profile.
 
 ## Current implementation status
 
-PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, exploratory cross-source profile, and SocialPulse screening sandbox. The cross-source index is hand-designed and uncalibrated; it is not a validated confidence score. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
+PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, exploratory cross-source profile, and SocialPulse news feed plus optional screening sandbox. The cross-source index is hand-designed and uncalibrated; it is not a validated confidence score. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
 
 ## Repository layout
 
