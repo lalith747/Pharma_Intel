@@ -22,7 +22,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | Signal prioritization | Literature triage score plus an explicitly uncalibrated cross-source profile for clozapine–neutropenia (FAERS EBGM + literature evidence) |
 | Knowledge graph | Implemented: GraphML evidence graph connecting drugs, ADRs, sentences, and PMIDs |
 | Dashboard | Implemented: modular Streamlit pages for overview, signals, evidence, graph, SocialPulse, and methods |
-| SocialPulse | Free GDELT public-news feed for clozapine coverage and blood-cell safety, with a six-hour shared cache and optional local sample screening; no scraping or paid X API |
+| SocialPulse | FDA Drug Safety Communications archive filtered for clozapine/Clozaril; six-hour cache and optional local sample screen; no paid X API |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
 ## Development sequence
@@ -38,7 +38,7 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 9. Streamlit + Plotly dashboard
 10. Final notebook, CSV, report, documentation, and repository publication
 
-Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse news remains source-separated from PubMed and FAERS. Its GDELT feed covers up to three months and 250 records per request; coverage is not exhaustive. The official X API is not used because post reads are pay-per-use. Optional user-supplied social samples require permitted access, de-identification, and human validation before research claims.
+Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse shows official FDA Drug Safety Communications that mention clozapine/Clozaril, separately from PubMed and FAERS. It parses the current FDA archive listing; entries older than the page’s archive boundary may require following FDA’s historical archive link. It does not include general news or X posts; official X API reads are pay-per-use. Optional user-supplied social samples require permitted access, de-identification, and human validation before research claims.
 
 ## Development environment
 
@@ -160,7 +160,7 @@ python scripts/prepare_dashboard_assets.py
 streamlit run dashboard/app.py
 ```
 
-The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. Alongside precomputed model outputs, it displays a live PubMed literature carousel refreshed through NCBI E-utilities and shared-cached for six hours. SocialPulse includes a free GDELT public-news feed with the same cache interval; neither feed needs runtime API credentials. These are literature/news references, not validated safety alerts. See [hosting and API details](docs/deployment.md).
+The same app is deployed from the public GitHub repository to Streamlit Community Cloud with entrypoint `dashboard/app.py`. Alongside precomputed model outputs, it displays a live PubMed literature carousel refreshed through NCBI E-utilities and shared-cached for six hours. SocialPulse reads the free public FDA Drug Safety Communications archive and caches it for six hours; no runtime API credentials are needed. These are source-linked notices, not an automated assessment of causality. See [hosting and API details](docs/deployment.md).
 
 The app uses Streamlit's page navigation with page modules under
 `dashboard/pages/` and shared loading/styles in `dashboard/shared.py`. Signal
