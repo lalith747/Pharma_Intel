@@ -49,14 +49,15 @@ deployment for the current project.
 |---|---|---|
 | PubMed retrieval | Yes: NCBI E-utilities via Biopython, during data acquisition | Set `NCBI_EMAIL`; `NCBI_API_KEY` is optional |
 | Biomedical model | Public Hugging Face Hub download of the pinned checkpoint when not cached; inference is local PyTorch | No token for this public model |
-| Hosted dashboard | Reads precomputed assets and fetches a small PubMed update feed through NCBI E-utilities, with a shared six-hour cache | None |
+| Hosted dashboard | Reads precomputed assets and fetches cached PubMed and GDELT public-news feeds | None |
 | OpenAI/LLM service | Not used | None |
 | GitHub | Repository hosting and source control | GitHub login for maintainers/deployment |
 
-The live carousel sends only general clozapine/blood-cell search terms to NCBI;
-it does not transmit user input. It requests up to ten recent matching
-records and shows publication details, abstract text, and PubMed links. Recent
-PubMed entry ordering is distinct from publication date. A keyword match is a
-literature reference, not a validated safety signal or evidence of causality.
-No API key or user-specific identifier is required for this small feed. Never
+The PubMed carousel sends only general clozapine/blood-cell search terms to NCBI. SocialPulse sends only its fixed clozapine news query to GDELT. Neither feed transmits user input. The PubMed carousel requests up to ten recent matching records. The GDELT
+news feed is free, uses no API key, searches up to the previous three months,
+and requests up to 250 article records. Results can be incomplete because
+GDELT coverage is not exhaustive and the per-request cap may truncate a busy
+query. PubMed entry ordering is distinct from publication date. News items and
+search matches are leads for review, not validated safety signals or proof of
+causality. PharmaIntel does not call the paid X API or scrape X. Never
 put NCBI keys, GitHub tokens, or other secrets in source control.
