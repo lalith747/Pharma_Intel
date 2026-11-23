@@ -1,0 +1,51 @@
+{
+  "drug": "clozapine",
+  "adr": "neutropenia",
+  "faers_reports_input": 929,
+  "faers_ebgm_input": 50.81,
+  "paper_status_counts": {
+    "unique_pmid_count": 119,
+    "supported_pmid_count": 93,
+    "speculative_pmid_count": 18,
+    "negated_pmid_count": 5,
+    "mixed_pmid_count": 3
+  },
+  "paper_status_counts_reconcile": true,
+  "stored_consistency": 0.8697478991596639,
+  "recomputed_consistency": 0.8697478991596639,
+  "components": {
+    "faers_ebgm": 0.9806987068133565,
+    "literature_breadth": 0.9074494224896568,
+    "supported_relation_share": 0.7815126050420168,
+    "assertion_consistency": 0.8697478991596639
+  },
+  "weights": {
+    "faers_ebgm": 0.3,
+    "literature_breadth": 0.25,
+    "supported_relation_share": 0.25,
+    "assertion_consistency": 0.2
+  },
+  "weighted_index": 89.0399698758858,
+  "equal_weight_index": 88.48521583761735,
+  "leave_one_component_out_indices": {
+    "faers_ebgm": 85.1700123878359,
+    "literature_breadth": 88.47164575152587,
+    "supported_relation_share": 92.66953966644719,
+    "assertion_consistency": 89.55626486586566
+  },
+  "leave_one_component_out_range": {
+    "minimum": 85.1700123878359,
+    "maximum": 92.66953966644719
+  },
+  "arbitrary_nonnegative_weights_range": {
+    "minimum": 78.15126050420169,
+    "maximum": 98.06987068133564
+  },
+  "range_with_faers_weight_fixed_at_30_percent": {
+    "minimum": 84.12684355734186,
+    "maximum": 92.94242077867668
+  },
+  "criterion_validated": false,
+  "criterion_validation_reason": "Only one pair has FAERS inputs; no independent expert labels or outcomes are available, and the relation holdout is still unannotated.",
+  "interpretation": "arithmetic and weight sensitivity audit only; not calibrated"
+}
