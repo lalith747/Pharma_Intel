@@ -8,8 +8,10 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 from dashboard.shared import load_dashboard_data, render_sidebar_metadata
+from pharmaintel.prioritization import audit_cross_source_index
 
 summary, evidence, ranked, graph = load_dashboard_data()
 render_sidebar_metadata(summary)
@@ -61,25 +63,16 @@ neut = ranked[ranked["adr"].astype(str).str.casefold().eq("neutropenia")]
 if not neut.empty:
     signal = neut.iloc[0]
     (faers_count, ebgm) = (929, 50.81)
-    faers_component = ebgm / (1 + ebgm)
-    lit_component = 1 - __import__("math").exp(-float(signal["unique_pmid_count"]) / 50)
-    relation_component = float(signal["supported_pmid_count"]) / max(
-        float(signal["unique_pmid_count"]), 1
-    )
-    context_component = float(signal["consistency"])
-    parts = {
-        "FAERS EBGM": faers_component,
-        "Literature breadth": lit_component,
-        "Supported-relation share": relation_component,
-        "Assertion consistency": context_component,
+    audit = audit_cross_source_index(signal, faers_reports=faers_count, ebgm=ebgm)
+    parts = audit["components"]
+    labels = {
+        "faers_ebgm": "FAERS EBGM",
+        "literature_breadth": "Literature breadth",
+        "supported_relation_share": "Supported-relation share",
+        "assertion_consistency": "Assertion consistency",
     }
-    weights = {
-        "FAERS EBGM": 0.3,
-        "Literature breadth": 0.25,
-        "Supported-relation share": 0.25,
-        "Assertion consistency": 0.2,
-    }
-    index = 100 * sum(parts[k] * weights[k] for k in parts)
+    weights = audit["weights"]
+    index = audit["weighted_index"]
     (left, right) = st.columns([1, 1.25])
     with left:
         st.metric(
@@ -93,7 +86,11 @@ if not neut.empty:
     with right:
         component_frame = pd.DataFrame(
             [
-                {"Evidence component": k, "Component score": v, "Weight": weights[k]}
+                {
+                    "Evidence component": labels[k],
+                    "Component score": v,
+                    "Weight": weights[k],
+                }
                 for (k, v) in parts.items()
             ]
         )
@@ -108,11 +105,21 @@ if not neut.empty:
                 "Weight": st.column_config.NumberColumn(format="%.0%%"),
             },
         )
+    sensitivity = audit["leave_one_component_out_range"]
+    arbitrary = audit["arbitrary_nonnegative_weights_range"]
+    st.caption(
+        "Arithmetic audit: 89.04 recomputed from source counts. Equal weights give "
+        f"{audit['equal_weight_index']:.2f}; omitting one component gives "
+        f"{sensitivity['minimum']:.2f}–{sensitivity['maximum']:.2f}. "
+        "If weights are unconstrained, the same components span "
+        f"{arbitrary['minimum']:.2f}–{arbitrary['maximum']:.2f}. "
+        "These are weight-sensitivity checks, not validation against outcomes."
+    )
     st.caption(
         "Transforms: EBGM/(1+EBGM); 1−exp(−unique PMIDs/50); supported PMIDs/unique relation PMIDs; existing assertion consistency. Weights: 30/25/25/20. The index is shown only for the exact clozapine–neutropenia pair; no unprovided FAERS values are imputed for other terms."
     )
     st.warning(
-        "This hand-designed composite has not been calibrated against expert judgments or outcomes. Do not call it model confidence or use it for clinical decisions.",
+        "The value reproduces the chosen formula, but it is not validated against independent expert judgments or outcomes. It is not model confidence or a clinical score; the relation holdout remains unannotated.",
         icon="⚠️",
     )
 st.download_button(
