@@ -42,14 +42,14 @@ confidence, causal probability, incidence estimate, effect size, or validated
 signal. PMIDs may also report overlapping cohorts, and the cue baseline can
 still miss or misassign relations.
 
-## Exploratory cross-source profile
+## Cross-source index audit
 
-The dashboard additionally reports a 0–100 **exploratory cross-source index**
-for the exact clozapine–neutropenia pair only. It uses the Assignment 1 report
-count (929) and Assignment 2 EBGM (50.81), together with the current literature
-corpus. This is a fixed, hand-designed weighted summary; it is not a trained
-machine-learning model, a calibrated confidence estimate, an incidence rate,
-or a causal probability. It must not be interpreted clinically.
+The dashboard reports a 0–100 **exploratory cross-source index** for the exact
+clozapine–neutropenia pair only. It uses Assignment 2 EBGM (50.81) and the
+current literature corpus. The Assignment 1 count (929) is displayed as context
+but does not enter the numeric index. The values 929 and 50.81 are assignment-
+provided inputs; this project has not independently regenerated them from raw
+FAERS data.
 
 | Component | Transform | Weight |
 |---|---|---:|
@@ -61,9 +61,47 @@ or a causal probability. It must not be interpreted clinically.
 The final index is 100 × the weighted sum. The saturation constant and weights
 are exploratory choices, not parameters estimated against expert labels or
 outcomes. No FAERS values are imputed for other ADR terms; those terms remain
-ranked by the literature-only score. A validated composite needs independent
-expert labels, a prespecified calibration/validation protocol, and uncertainty
-analysis. It is deliberately called an index, not a confidence score.
+ranked by the literature-only score. It is deliberately called an index, not a
+confidence score.
+
+### Reproducibility and sensitivity results
+
+Run the reproducible audit with:
+
+```bash
+python scripts/audit_cross_source_index.py
+```
+
+The audit checks that the PMID status counts reconcile, recomputes assertion
+consistency, recomputes the weighted index, and evaluates weight sensitivity.
+For the bundled snapshot:
+
+| Audit | Result |
+|---|---:|
+| Unique PMID status counts | 93 supported + 18 speculative + 5 negated + 3 mixed = 119 |
+| Recomputed assertion consistency | 0.8697; matches the stored value |
+| Recomputed index | 89.040; dashboard displays 89.0 |
+| Equal weights | 88.485 |
+| Omit one component, then renormalize remaining weights | 85.170–92.670 |
+| Allow any nonnegative weights summing to one | 78.151–98.070 |
+| Hold EBGM weight at 30%, redistribute the remaining 70% | 84.127–92.942 |
+
+This confirms the arithmetic and exposes its dependence on subjective weights.
+It does **not** validate ranking quality, calibration, clinical meaning, or
+causality. The full-weight range is wide because the component values themselves
+range from 0.782 to 0.981. EBGM transforms to 0.981 under `EBGM/(1+EBGM)`, so
+this transform is near its ceiling for 50.81. Three of four components use the
+same literature evidence and should not be treated as independent evidence.
+
+No criterion validation is possible yet: the cross-source score exists for one
+pair only, there are no independent expert labels or outcome data, and the
+blinded relation holdout has 60 pending annotations. The available relation
+pilot used assistant-curated in-sample labels and rules revised against their
+errors; in that pilot, supported-relation recall was 0.581 and co-mention
+precision was 0.268. Those are development diagnostics, not independent
+performance estimates. Consequently, 89.0 is a reproducible exploratory index,
+not a validated score. The audit output is saved to
+`results/evaluation/cross_source_index_audit.json`.
 
 ## Current transformer corpus run
 
