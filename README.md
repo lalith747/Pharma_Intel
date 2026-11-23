@@ -100,6 +100,19 @@ This runs the target-term lexical baseline and the two shortlisted Hugging Face 
 
 The first completed benchmark and model-selection rationale are in [NER benchmark results](docs/ner_benchmark_results.md).
 
+The exploratory clozapine–neutropenia cross-source index has an automated
+arithmetic and weight-sensitivity audit:
+
+```bash
+python scripts/audit_cross_source_index.py
+```
+
+The current result reproduces 89.04 (shown as 89.0) and checks paper-status
+count reconciliation. This does not validate predictive or clinical meaning:
+only one pair has assignment-provided FAERS inputs, the relation holdout is
+pending, and component weights were not learned from independent outcomes. See
+the audit results and limitations in [signal prioritization](docs/signal_prioritization.md).
+
 ## Relation evidence, signal ranking, and knowledge graph
 
 After PubMed retrieval, generate traceable case-study evidence, ranked signal
@@ -170,7 +183,7 @@ exploratory cross-source profile.
 
 ## Current implementation status
 
-PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, exploratory cross-source profile, and SocialPulse news feed plus optional screening sandbox. The cross-source index is hand-designed and uncalibrated; it is not a validated confidence score. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
+PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, audited exploratory cross-source profile, and SocialPulse news feed plus optional screening sandbox. The composite arithmetic and weight sensitivity are reproducible, but the index is not calibrated or clinically validated. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
 
 ## Repository layout
 
