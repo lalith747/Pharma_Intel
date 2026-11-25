@@ -1,12 +1,51 @@
+<div align="center">
+
+<img src="assets/banner.svg" alt="PharmaIntel-AI: AI-powered pharmacovigilance intelligence from biomedical literature" width="100%"/>
+
+<br/>
+
+[![Live dashboard](https://img.shields.io/badge/Live%20dashboard-Streamlit-93002D?style=for-the-badge&logo=streamlit&logoColor=FFF3A9)](https://pharmaintel.streamlit.app/)
+![Python](https://img.shields.io/badge/Python-3.10%E2%80%933.12-93002D?style=for-the-badge&logo=python&logoColor=white)
+![Data](https://img.shields.io/badge/Data-PubMed%20%7C%20FAERS%20%7C%20FDA%20DSC-FFA600?style=for-the-badge)
+![Model](https://img.shields.io/badge/NER-BC5CDR%20BiomedBERT-93002D?style=for-the-badge&logo=huggingface&logoColor=white)
+![Status](https://img.shields.io/badge/Type-Research%20%26%20Portfolio-FFA600?style=for-the-badge)
+
+<br/>
+
+[**Case study**](#case-study) &nbsp;·&nbsp;
+[**Components**](#project-components) &nbsp;·&nbsp;
+[**Development sequence**](#development-sequence) &nbsp;·&nbsp;
+[**Environment**](#development-environment) &nbsp;·&nbsp;
+[**PubMed sample**](#retrieve-the-initial-pubmed-sample) &nbsp;·&nbsp;
+[**Evidence and graph**](#relation-evidence-signal-ranking-and-knowledge-graph) &nbsp;·&nbsp;
+[**Dashboard**](#transformer-corpus-run-and-dashboard) &nbsp;·&nbsp;
+[**Notebook and hosting**](#notebook-and-hosting) &nbsp;·&nbsp;
+[**Status**](#current-implementation-status) &nbsp;·&nbsp;
+[**Layout**](#repository-layout)
+
+</div>
+
+<img src="assets/divider.svg" width="100%" alt=""/>
+
 # PharmaIntel-AI
 
 **AI-powered pharmacovigilance intelligence from biomedical literature.**
 
-PharmaIntel-AI is a research and portfolio project for retrieving PubMed literature, extracting drug and adverse-event mentions, analysing their sentence-level relationships, and prioritizing traceable evidence for review. It is a literature-mining aid; it does not establish clinical causality or replace pharmacovigilance review.
+> PharmaIntel-AI is a research and portfolio project for retrieving PubMed literature, extracting drug and adverse-event mentions, analysing their sentence-level relationships, and prioritizing traceable evidence for review. It is a literature-mining aid; it does not establish clinical causality or replace pharmacovigilance review.
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Case study
 
+<div align="center">
+<img src="assets/case-study.svg" alt="Clozapine case study: neutropenia 929, agranulocytosis 244, granulocytopenia 5 reports; EBGM 50.81" width="100%"/>
+</div>
+
+<br/>
+
 The initial case study is **clozapine–neutropenia**, selected because it is present in both supplied FAERS assignments. Assignment 1 lists 929 reports for neutropenia, alongside separate rows for agranulocytosis (244) and granulocytopenia (5). Assignment 2 reports EBGM 50.81 for clozapine–neutropenia. These are separate source terms and outcomes. Any grouping into a broader hematological event family will be documented as a terminology mapping, not treated as equivalence. FAERS counts are reporting statistics, not incidence or causal estimates.
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Project components
 
@@ -25,7 +64,15 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 | SocialPulse | FDA Drug Safety Communications archive filtered for clozapine/Clozaril; six-hour cache and optional local sample screen; no paid X API |
 | Deliverables | Notebook, ranked CSV, 2–3 page PDF report, and GitHub repository |
 
+<img src="assets/divider.svg" width="100%" alt=""/>
+
 ## Development sequence
+
+<div align="center">
+<img src="assets/pipeline.svg" alt="Ten-stage development pipeline" width="100%"/>
+</div>
+
+<br/>
 
 1. Architecture and environment
 2. PubMed retrieval and provenance
@@ -39,6 +86,8 @@ The initial case study is **clozapine–neutropenia**, selected because it is pr
 10. Final notebook, CSV, report, documentation, and repository publication
 
 Keyword/rule matching is treated as a baseline, not a complete NLP system. The selected transformer is used for entity candidates, while relation and assertion decisions currently use a transparent lexical baseline. Model confidence is not a causal probability. SocialPulse shows official FDA Drug Safety Communications that mention clozapine/Clozaril, separately from PubMed and FAERS. It parses the current FDA archive listing; entries older than the page’s archive boundary may require following FDA’s historical archive link. It does not include general news or X posts; official X API reads are pay-per-use. Optional user-supplied social samples require permitted access, de-identification, and human validation before research claims.
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Development environment
 
@@ -60,6 +109,8 @@ python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 For another platform or an NVIDIA GPU, use the appropriate command from the [official PyTorch installation selector](https://pytorch.org/get-started/locally/). The `requirements.txt` file installs the project extras; install the matching PyTorch build as a separate platform-specific step. Model weights are downloaded from Hugging Face when a selected model is first used and are not stored in the repository.
 
 The current development machine is Ubuntu 22.04, Python 3.10, Intel Core i7-13700, 16 GB RAM, and no NVIDIA GPU. CPU inference is the initial target; latency and memory use must be measured before selecting models.
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Retrieve the initial PubMed sample
 
@@ -113,6 +164,8 @@ only one pair has assignment-provided FAERS inputs, the relation holdout is
 pending, and component weights were not learned from independent outcomes. See
 the audit results and limitations in [signal prioritization](docs/signal_prioritization.md).
 
+<img src="assets/divider.svg" width="100%" alt=""/>
+
 ## Relation evidence, signal ranking, and knowledge graph
 
 After PubMed retrieval, generate traceable case-study evidence, ranked signal
@@ -129,6 +182,8 @@ evidence locally under `data/processed/pubmed/`. Its score prioritizes
 literature-review candidates; it is not a probability or causal estimate. Read
 the [scoring method and limitations](docs/signal_prioritization.md) before
 interpreting ranks.
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Transformer corpus run and dashboard
 
@@ -162,7 +217,15 @@ The resulting metrics are only independent-human validation if the annotations
 were completed by a reviewer who did not create the development labels/rules;
 the evaluator records this limitation explicitly.
 
+<img src="assets/divider.svg" width="100%" alt=""/>
+
 ## Notebook and hosting
+
+<div align="center">
+
+[![Open the live dashboard](https://img.shields.io/badge/Open-PharmaIntel%20Safety%20Intelligence-93002D?style=for-the-badge&logo=streamlit&logoColor=FFF3A9)](https://pharmaintel.streamlit.app/)
+
+</div>
 
 **Live dashboard:** [PharmaIntel Safety Intelligence](https://pharmaintel.streamlit.app/)
 
@@ -181,9 +244,13 @@ terms display a within-corpus relative literature index; only the exact
 clozapine–neutropenia pair has the supplied FAERS values for the separate,
 exploratory cross-source profile.
 
+<img src="assets/divider.svg" width="100%" alt=""/>
+
 ## Current implementation status
 
 PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rules, unique-PMID evidence scoring, and provenance-preserving GraphML are implemented. The dashboard includes an evidence explorer, interactive graph, audited exploratory cross-source profile, and SocialPulse news feed plus optional screening sandbox. The composite arithmetic and weight sensitivity are reproducible, but the index is not calibrated or clinically validated. A pinned BC5CDR model has been run across the 3,915-sentence local snapshot. A 60-record PMID-disjoint sample is prepared, but blinded human review remains pending, so no held-out relation metrics are available. See the [relation methods](docs/relation_extraction_baseline.md), [annotation guide](docs/relation_annotation_guide.md), and [signal prioritization method](docs/signal_prioritization.md).
+
+<img src="assets/divider.svg" width="100%" alt=""/>
 
 ## Repository layout
 
@@ -198,3 +265,12 @@ PubMed retrieval, the initial NER benchmark, pair-scoped relation/assertion rule
 └── tests/                             # automated checks
 ```
 
+<div align="center">
+
+<br/>
+
+<img src="assets/divider.svg" width="100%" alt=""/>
+
+[Back to top](#pharmaintel-ai)
+
+</div>
