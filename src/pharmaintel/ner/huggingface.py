@@ -47,7 +47,9 @@ def predict_entities(
         import torch
         from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
     except ImportError as exc:
-        raise RuntimeError("Install the NLP extras and CPU/GPU PyTorch before model inference.") from exc
+        raise RuntimeError(
+            "Install the NLP extras and CPU/GPU PyTorch before model inference."
+        ) from exc
 
     tokenizer = AutoTokenizer.from_pretrained(
         model_id, revision=revision, use_fast=True, local_files_only=local_files_only

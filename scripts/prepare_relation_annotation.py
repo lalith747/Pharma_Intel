@@ -203,8 +203,12 @@ def build_rows() -> list[dict[str, Any]]:
                         "sentence": source["sentence"],
                         "gold_status": gold_status,
                         "predicted_status": predicted_status,
-                        "predicted_relation_cues": json.dumps(prediction["relation_cues"], ensure_ascii=False),
-                        "predicted_context_cues": json.dumps(prediction["context_cues"], ensure_ascii=False),
+                        "predicted_relation_cues": json.dumps(
+                            prediction["relation_cues"], ensure_ascii=False
+                        ),
+                        "predicted_context_cues": json.dumps(
+                            prediction["context_cues"], ensure_ascii=False
+                        ),
                         "annotation_provenance": "assistant_first_pass_requires_independent_adjudication",
                         "annotation_notes": "",
                     }
@@ -222,9 +226,19 @@ def main() -> None:
         OUTPUT,
         rows,
         [
-            "relation_id", "sample_id", "sampling_stratum", "pmid", "drug", "adr",
-            "sentence", "gold_status", "predicted_status", "predicted_relation_cues",
-            "predicted_context_cues", "annotation_provenance", "annotation_notes",
+            "relation_id",
+            "sample_id",
+            "sampling_stratum",
+            "pmid",
+            "drug",
+            "adr",
+            "sentence",
+            "gold_status",
+            "predicted_status",
+            "predicted_relation_cues",
+            "predicted_context_cues",
+            "annotation_provenance",
+            "annotation_notes",
         ],
     )
     counts: dict[str, int] = {}

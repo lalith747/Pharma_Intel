@@ -50,5 +50,10 @@ def test_gold_validation_requires_frozen_labels_and_exact_offsets():
         load_and_validate_gold([{**row, "review_status": "pending"}])
     with pytest.raises(ValueError, match="span text does not match offsets"):
         load_and_validate_gold(
-            [{**row, "gold_entities_json": '[{"text":"clozapine","label":"DRUG","start":0,"end":9}]'}]
+            [
+                {
+                    **row,
+                    "gold_entities_json": '[{"text":"clozapine","label":"DRUG","start":0,"end":9}]',
+                }
+            ]
         )

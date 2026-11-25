@@ -15,12 +15,47 @@ from pharmaintel.context_analysis.assertion import analyze_assertion
 from pharmaintel.ner.rule_baseline import extract_case_study_entities
 
 _RELATION_PATTERNS = (
-    ("associated", re.compile(r"\b(?:associated|association|related|relationship|linked|correlated|correlation)\s+(?:with|to)\b", re.IGNORECASE)),
-    ("risk_language", re.compile(r"\b(?:(?:increased|elevated|higher|reduced|lower)\s+)?risks?\s+(?:of|for|from)\b", re.IGNORECASE)),
-    ("developed_after", re.compile(r"\b(?:develop(?:ed|s|ing)?|occur(?:red|s|ring)?|report(?:ed|s|ing)?|present(?:ed|s|ing)?|onset)\s+(?:after|following|with)\b", re.IGNORECASE)),
-    ("event_after_exposure", re.compile(r"\b(?:after|following|during|upon)\s+(?:treatment|exposure|administration|use|therapy|intake)\b", re.IGNORECASE)),
-    ("causal_wording", re.compile(r"\b(?:caus\w*|induc\w*|trigger\w*|result(?:ed|ing)?\s+in|lead\w*\s+to)\b", re.IGNORECASE)),
-    ("adverse_effect_wording", re.compile(r"\b(?:adverse\s+(?:effect|reaction)|side\s+effect|toxicit\w*)\b", re.IGNORECASE)),
+    (
+        "associated",
+        re.compile(
+            r"\b(?:associated|association|related|relationship|linked|correlated|correlation)\s+(?:with|to)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "risk_language",
+        re.compile(
+            r"\b(?:(?:increased|elevated|higher|reduced|lower)\s+)?risks?\s+(?:of|for|from)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "developed_after",
+        re.compile(
+            r"\b(?:develop(?:ed|s|ing)?|occur(?:red|s|ring)?|report(?:ed|s|ing)?|present(?:ed|s|ing)?|onset)\s+(?:after|following|with)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "event_after_exposure",
+        re.compile(
+            r"\b(?:after|following|during|upon)\s+(?:treatment|exposure|administration|use|therapy|intake)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "causal_wording",
+        re.compile(
+            r"\b(?:caus\w*|induc\w*|trigger\w*|result(?:ed|ing)?\s+in|lead\w*\s+to)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "adverse_effect_wording",
+        re.compile(
+            r"\b(?:adverse\s+(?:effect|reaction)|side\s+effect|toxicit\w*)\b", re.IGNORECASE
+        ),
+    ),
 )
 
 _CAUSAL_LANGUAGE_PATTERN = re.compile(
@@ -93,9 +128,11 @@ def _assign_pair_cues(
         candidates: list[tuple[float, tuple[int, int]]] = []
         (cue["start"] + cue["end"]) / 2
         for drug, adr in pairs:
-            if not (_same_clause(text, cue["start"], drug["start"])
-                    and _same_clause(text, cue["start"], adr["start"])
-                    and _same_clause(text, drug["start"], adr["start"])):
+            if not (
+                _same_clause(text, cue["start"], drug["start"])
+                and _same_clause(text, cue["start"], adr["start"])
+                and _same_clause(text, drug["start"], adr["start"])
+            ):
                 continue
             pair_start = min(drug["start"], adr["start"])
             pair_end = max(drug["end"], adr["end"])
@@ -154,7 +191,9 @@ def extract_sentence_relations(
                     "drug": {"text": drug["text"], "start": drug["start"], "end": drug["end"]},
                     "adr": {"text": adr["text"], "start": adr["start"], "end": adr["end"]},
                     "evidence_sentence": sentence,
-                    "evidence_class": "explicit_relation_language" if relation_cues else "co_mention_only",
+                    "evidence_class": "explicit_relation_language"
+                    if relation_cues
+                    else "co_mention_only",
                     "relation_cues": relation_cues,
                     "assertion": assertion["assertion"],
                     "context_cues": assertion["cues"],
@@ -162,7 +201,9 @@ def extract_sentence_relations(
                     and bool(_CAUSAL_LANGUAGE_PATTERN.search(sentence)),
                     "causal_conclusion": None,
                     "sentence_relation_cues": sentence_relation_cues,
-                    "method": "case_study_lexicon_and_relation_cues" if entities is None else "supplied_entities_and_relation_cues",
+                    "method": "case_study_lexicon_and_relation_cues"
+                    if entities is None
+                    else "supplied_entities_and_relation_cues",
                 }
             )
     return records

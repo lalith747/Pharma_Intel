@@ -10,7 +10,12 @@ def test_ranking_deduplicates_papers_and_discounts_speculation_and_negation():
         {"drug": "clozapine", "adr": "neutropenia", "pmid": "1", "relation_status": "supported"},
         {"drug": "clozapine", "adr": "neutropenia", "pmid": "2", "relation_status": "speculative"},
         {"drug": "clozapine", "adr": "neutropenia", "pmid": "3", "relation_status": "negated"},
-        {"drug": "clozapine", "adr": "agranulocytosis", "pmid": "4", "relation_status": "co_mention"},
+        {
+            "drug": "clozapine",
+            "adr": "agranulocytosis",
+            "pmid": "4",
+            "relation_status": "co_mention",
+        },
     ]
 
     ranked = rank_safety_signals(evidence)
@@ -29,7 +34,12 @@ def test_ranking_deduplicates_papers_and_discounts_speculation_and_negation():
 def test_mixed_paper_is_explicit_and_score_is_not_a_probability():
     ranked = rank_safety_signals(
         [
-            {"drug": "clozapine", "adr": "neutropenia", "pmid": "1", "relation_status": "supported"},
+            {
+                "drug": "clozapine",
+                "adr": "neutropenia",
+                "pmid": "1",
+                "relation_status": "supported",
+            },
             {"drug": "clozapine", "adr": "neutropenia", "pmid": "1", "relation_status": "negated"},
         ]
     )[0]
@@ -57,11 +67,15 @@ def test_evidence_graph_preserves_source_sentence_and_pmid_edges():
     }
     graph = build_evidence_graph([row], [])
 
-    evidence_nodes = [node for node, data in graph.nodes(data=True) if data["node_type"] == "evidence"]
+    evidence_nodes = [
+        node for node, data in graph.nodes(data=True) if data["node_type"] == "evidence"
+    ]
     assert len(evidence_nodes) == 1
     evidence_node = evidence_nodes[0]
     assert graph.nodes[evidence_node]["sentence"] == row["evidence_sentence"]
     assert graph.nodes[evidence_node]["pmid"] == "12345"
     assert {data["relation"] for _, _, data in graph.out_edges(evidence_node, data=True)} == {
-        "mentions_drug", "mentions_event", "published_in"
+        "mentions_drug",
+        "mentions_event",
+        "published_in",
     }

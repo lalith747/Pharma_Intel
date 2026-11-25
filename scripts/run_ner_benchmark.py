@@ -38,7 +38,9 @@ def _run(args: argparse.Namespace) -> None:
     expected_ids = {row["sample_id"] for row in annotation_rows}
     completed_ids = {row["sample_id"] for row in gold_rows}
     if expected_ids != completed_ids:
-        raise ValueError("Every sample row must have a completed gold annotation before benchmarking.")
+        raise ValueError(
+            "Every sample row must have a completed gold annotation before benchmarking."
+        )
 
     all_predictions: list[dict[str, Any]] = []
     provenance: list[dict[str, str]] = [
@@ -104,7 +106,9 @@ def _run(args: argparse.Namespace) -> None:
         + "\n",
         encoding="utf-8",
     )
-    print(f"Saved {len(all_predictions)} prediction rows and {len(metrics)} metric rows to {output_path}")
+    print(
+        f"Saved {len(all_predictions)} prediction rows and {len(metrics)} metric rows to {output_path}"
+    )
 
 
 def main() -> None:

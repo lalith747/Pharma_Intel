@@ -12,8 +12,13 @@ from typing import Any
 
 DRUG_ALIASES = ("clozapine", "clozaril", "leponex")
 ADR_ALIASES = (
-    "neutropenia", "neutropenic", "agranulocytosis", "granulocytopenia",
-    "granulocytopenic", "leukopenia", "leucopenia",
+    "neutropenia",
+    "neutropenic",
+    "agranulocytosis",
+    "granulocytopenia",
+    "granulocytopenic",
+    "leukopenia",
+    "leucopenia",
 )
 
 

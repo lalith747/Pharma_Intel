@@ -13,18 +13,37 @@ LABELS = ["supported", "negated", "speculative", "co_mention", "unclear"]
 
 st.set_page_config(page_title="PharmaIntel · Relation Review", page_icon="🧬", layout="wide")
 st.title("PharmaIntel · Blinded Relation Review")
-st.caption("Review whether the sentence supports the displayed drug–event relation. Model outputs are hidden.")
+st.caption(
+    "Review whether the sentence supports the displayed drug–event relation. Model outputs are hidden."
+)
 
 path = Path(st.sidebar.text_input("Annotation CSV", value=str(DEFAULT_FILE))).expanduser()
 if not path.exists():
     st.error(f"Annotation file not found: {path}")
     st.stop()
 frame = pd.read_csv(path, dtype={"pmid": str}, keep_default_na=False)
-required = {"relation_id", "sampling_stratum", "pmid", "title", "sentence", "drug", "adr", "gold_status", "review_status", "annotation_notes"}
+required = {
+    "relation_id",
+    "sampling_stratum",
+    "pmid",
+    "title",
+    "sentence",
+    "drug",
+    "adr",
+    "gold_status",
+    "review_status",
+    "annotation_notes",
+}
 if missing := required - set(frame.columns):
     st.error(f"Missing required columns: {', '.join(sorted(missing))}")
     st.stop()
-leak_fields = {"predicted_status", "predicted_relation_cues", "predicted_context_cues", "model_score", "model_prediction"}
+leak_fields = {
+    "predicted_status",
+    "predicted_relation_cues",
+    "predicted_context_cues",
+    "model_score",
+    "model_prediction",
+}
 if leak_fields & set(frame.columns):
     st.error("This review CSV contains prediction fields; refusing to show it as blinded.")
     st.stop()
@@ -36,7 +55,9 @@ if frame.empty:
     st.stop()
 
 complete = frame["review_status"].eq("complete")
-st.caption(f"{int(complete.sum())} complete · {len(frame) - int(complete.sum())} pending · strata shown separately in analysis")
+st.caption(
+    f"{int(complete.sum())} complete · {len(frame) - int(complete.sum())} pending · strata shown separately in analysis"
+)
 if "relation_row" not in st.session_state:
     pending = frame.index[~complete].tolist()
     st.session_state.relation_row = pending[0] if pending else 0
@@ -54,12 +75,16 @@ with right:
 index = st.session_state.relation_row
 row = frame.iloc[index]
 with middle:
-    st.markdown(f"**{row['relation_id']}** · {row['sampling_stratum']} · PMID [{row['pmid']}](https://pubmed.ncbi.nlm.nih.gov/{row['pmid']}/) · {index + 1}/{len(frame)}")
+    st.markdown(
+        f"**{row['relation_id']}** · {row['sampling_stratum']} · PMID [{row['pmid']}](https://pubmed.ncbi.nlm.nih.gov/{row['pmid']}/) · {index + 1}/{len(frame)}"
+    )
 st.subheader(str(row["title"]) or "PubMed article")
 st.markdown(f"**Candidate pair:** {row['drug']} → {row['adr']}")
 st.markdown("**Evidence sentence**")
 st.code(str(row["sentence"]), language=None, wrap_lines=True)
-st.caption("Choose the sentence-level relation status. “Supported” means the text asserts a relation; it does not establish clinical causality.")
+st.caption(
+    "Choose the sentence-level relation status. “Supported” means the text asserts a relation; it does not establish clinical causality."
+)
 
 status_key = f"gold_{row['relation_id']}"
 note_key = f"note_{row['relation_id']}"

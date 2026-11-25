@@ -6,8 +6,13 @@ import re
 
 DRUG_TERMS = ("clozapine", "clozaril", "leponex")
 ADR_TERMS = (
-    "neutropenia", "neutropenic", "agranulocytosis", "granulocytopenia",
-    "granulocytopenic", "leukopenia", "leucopenia",
+    "neutropenia",
+    "neutropenic",
+    "agranulocytosis",
+    "granulocytopenia",
+    "granulocytopenic",
+    "leukopenia",
+    "leucopenia",
 )
 
 
@@ -27,5 +32,7 @@ def extract_case_study_entities(text: str) -> list[dict[str, object]]:
                         "score": None,
                     }
                 )
-    entities.sort(key=lambda entity: (int(entity["start"]), int(entity["end"]), str(entity["label"])))
+    entities.sort(
+        key=lambda entity: (int(entity["start"]), int(entity["end"]), str(entity["label"]))
+    )
     return entities

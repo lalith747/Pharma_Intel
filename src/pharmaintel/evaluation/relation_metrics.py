@@ -17,16 +17,27 @@ def _binary_metrics(gold: Iterable[bool], predicted: Iterable[bool]) -> dict[str
     tn = sum(not expected and not actual for expected, actual in pairs)
     precision = tp / (tp + fp) if tp + fp else None
     recall = tp / (tp + fn) if tp + fn else None
-    f1 = 2 * precision * recall / (precision + recall) if precision is not None and recall is not None and precision + recall else None
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if precision is not None and recall is not None and precision + recall
+        else None
+    )
     return {
-        "support": len(pairs), "true_positive": tp, "false_positive": fp,
-        "false_negative": fn, "true_negative": tn,
-        "precision": precision, "recall": recall, "f1": f1,
+        "support": len(pairs),
+        "true_positive": tp,
+        "false_positive": fp,
+        "false_negative": fn,
+        "true_negative": tn,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
     }
 
 
 def _status_metrics(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    confusion = {gold: {predicted: 0 for predicted in RELATION_STATUSES} for gold in RELATION_STATUSES}
+    confusion = {
+        gold: {predicted: 0 for predicted in RELATION_STATUSES} for gold in RELATION_STATUSES
+    }
     for row in rows:
         gold, predicted = row["gold_status"], row["predicted_status"]
         if gold in confusion and predicted in confusion[gold]:
@@ -69,7 +80,8 @@ def evaluate_relation_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
     estimates and do not measure causality.
     """
     invalid = [
-        row for row in rows
+        row
+        for row in rows
         if row.get("gold_status") not in {*RELATION_STATUSES, "unclear"}
         or row.get("predicted_status") not in RELATION_STATUSES
     ]
@@ -89,7 +101,9 @@ def evaluate_relation_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
             (row["gold_status"] in RELATION_PRESENT for row in labeled),
             (row["predicted_status"] != "co_mention" for row in labeled),
         )
-        context_correct = sum(row["gold_status"] == row["predicted_status"] for row in relation_positive)
+        context_correct = sum(
+            row["gold_status"] == row["predicted_status"] for row in relation_positive
+        )
         return {
             "candidate_pairs": len(group),
             "unclear_excluded": len(group) - len(labeled),
@@ -107,10 +121,14 @@ def evaluate_relation_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
         if row["gold_status"] != row["predicted_status"]:
             error_rows.append(
                 {
-                    "relation_id": row["relation_id"], "sample_id": row["sample_id"],
-                    "sampling_stratum": row["sampling_stratum"], "pmid": row["pmid"],
-                    "drug": row["drug"], "adr": row["adr"],
-                    "gold_status": row["gold_status"], "predicted_status": row["predicted_status"],
+                    "relation_id": row["relation_id"],
+                    "sample_id": row["sample_id"],
+                    "sampling_stratum": row["sampling_stratum"],
+                    "pmid": row["pmid"],
+                    "drug": row["drug"],
+                    "adr": row["adr"],
+                    "gold_status": row["gold_status"],
+                    "predicted_status": row["predicted_status"],
                     "predicted_relation_cues": row["predicted_relation_cues"],
                     "predicted_context_cues": row["predicted_context_cues"],
                     "sentence": row["sentence"],

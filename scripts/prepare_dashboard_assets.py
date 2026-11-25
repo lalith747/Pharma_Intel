@@ -37,7 +37,9 @@ def main() -> None:
     shutil.copyfile(INPUTS["signals"], ASSETS / "transformer_case_study_signals.csv")
     manifest = {
         "generated_by": "scripts/prepare_dashboard_assets.py",
-        "model_revision": json.loads(INPUTS["summary"].read_text(encoding="utf-8"))["model"]["model_revision"],
+        "model_revision": json.loads(INPUTS["summary"].read_text(encoding="utf-8"))["model"][
+            "model_revision"
+        ],
         "source_files": {name: str(path.relative_to(ROOT)) for name, path in INPUTS.items()},
         "purpose": "Precomputed public-literature outputs for the hosted Streamlit results explorer; no model weights or API credentials are included.",
     }

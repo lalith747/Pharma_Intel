@@ -12,9 +12,14 @@ from collections.abc import Iterable
 from typing import Any
 
 _NEGATION_PATTERNS = (
-    re.compile(r"\bno\s+(?:significant\s+)?(?:association|relationship|evidence|link)\b", re.IGNORECASE),
+    re.compile(
+        r"\bno\s+(?:significant\s+)?(?:association|relationship|evidence|link)\b", re.IGNORECASE
+    ),
     re.compile(r"\bnot\s+(?:associated|related|linked|caused)\b", re.IGNORECASE),
-    re.compile(r"\b(?:did|does|do|was|were|is|are)\s+not\s+(?:develop|experience|cause|induce|associate)\w*\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:did|does|do|was|were|is|are)\s+not\s+(?:develop|experience|cause|induce|associate)\w*\b",
+        re.IGNORECASE,
+    ),
     re.compile(r"\bwithout\s+(?:evidence\s+of\s+)?(?:developing\s+)?", re.IGNORECASE),
     re.compile(r"\babsence\s+of\b", re.IGNORECASE),
     re.compile(r"\bno\s+(?:cases?\s+of\s+)?", re.IGNORECASE),
@@ -35,11 +40,15 @@ _SPECULATION_PATTERNS = (
 )
 
 
-def _collect_cues(text: str, patterns: Iterable[re.Pattern[str]], kind: str) -> list[dict[str, Any]]:
+def _collect_cues(
+    text: str, patterns: Iterable[re.Pattern[str]], kind: str
+) -> list[dict[str, Any]]:
     cues: list[dict[str, Any]] = []
     for pattern in patterns:
         for match in pattern.finditer(text):
-            cues.append({"kind": kind, "text": match.group(), "start": match.start(), "end": match.end()})
+            cues.append(
+                {"kind": kind, "text": match.group(), "start": match.start(), "end": match.end()}
+            )
     return sorted(cues, key=lambda cue: (cue["start"], cue["end"], cue["kind"]))
 
 
@@ -62,7 +71,8 @@ def analyze_assertion(text: str, entities: Iterable[dict[str, Any]] = ()) -> dic
 
     if spans:
         cues = [
-            cue for cue in all_cues
+            cue
+            for cue in all_cues
             if any(cue["end"] >= start - 80 and cue["start"] <= end + 80 for start, end in spans)
         ]
     else:

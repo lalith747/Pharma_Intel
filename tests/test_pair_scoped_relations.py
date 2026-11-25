@@ -40,9 +40,7 @@ def test_inflected_cause_and_induce_forms_are_detected():
 
 
 def test_risk_in_program_name_is_not_a_relation_cue():
-    sentence = (
-        "The Clozapine Risk Evaluation Strategy monitors patients for neutropenia."
-    )
+    sentence = "The Clozapine Risk Evaluation Strategy monitors patients for neutropenia."
     entities = [
         _entity(sentence, "Clozapine", "DRUG"),
         _entity(sentence, "neutropenia", "ADR"),

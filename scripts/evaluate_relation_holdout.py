@@ -32,7 +32,9 @@ def _status(relation: dict[str, Any]) -> str:
     return "supported"
 
 
-def build_evaluation_rows(annotations: pd.DataFrame, prediction_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_evaluation_rows(
+    annotations: pd.DataFrame, prediction_rows: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
     lookup = {(str(row["pmid"]), str(row["sentence_index"])): row for row in prediction_rows}
     results = []
     for row in annotations.to_dict(orient="records"):
@@ -43,24 +45,33 @@ def build_evaluation_rows(annotations: pd.DataFrame, prediction_rows: list[dict[
         relations = extract_sentence_relations(
             str(row["sentence"]), prediction.get("entities", []), use_case_study_lexicon=False
         )
-        matches = [relation for relation in relations
-                   if relation["drug"]["text"].casefold() == str(row["drug"]).casefold()
-                   and relation["adr"]["text"].casefold() == str(row["adr"]).casefold()]
+        matches = [
+            relation
+            for relation in relations
+            if relation["drug"]["text"].casefold() == str(row["drug"]).casefold()
+            and relation["adr"]["text"].casefold() == str(row["adr"]).casefold()
+        ]
         if not matches:
             raise ValueError(f"Candidate pair is not reproducible from pinned model output: {key}.")
-        results.append({
-            "relation_id": row["relation_id"],
-            "sample_id": row["relation_id"],
-            "sampling_stratum": row["sampling_stratum"],
-            "pmid": str(row["pmid"]),
-            "drug": row["drug"],
-            "adr": row["adr"],
-            "sentence": row["sentence"],
-            "gold_status": row["gold_status"],
-            "predicted_status": _status(matches[0]),
-            "predicted_relation_cues": json.dumps(matches[0]["relation_cues"], ensure_ascii=False),
-            "predicted_context_cues": json.dumps(matches[0]["context_cues"], ensure_ascii=False),
-        })
+        results.append(
+            {
+                "relation_id": row["relation_id"],
+                "sample_id": row["relation_id"],
+                "sampling_stratum": row["sampling_stratum"],
+                "pmid": str(row["pmid"]),
+                "drug": row["drug"],
+                "adr": row["adr"],
+                "sentence": row["sentence"],
+                "gold_status": row["gold_status"],
+                "predicted_status": _status(matches[0]),
+                "predicted_relation_cues": json.dumps(
+                    matches[0]["relation_cues"], ensure_ascii=False
+                ),
+                "predicted_context_cues": json.dumps(
+                    matches[0]["context_cues"], ensure_ascii=False
+                ),
+            }
+        )
     return results
 
 
@@ -80,15 +91,25 @@ def main() -> None:
     overlap = set(annotations["pmid"]) & set(dev["pmid"])
     if overlap:
         raise ValueError(f"Holdout overlaps development PMIDs: {sorted(overlap)[:5]}.")
-    prediction_rows = [json.loads(line) for line in PREDICTIONS.read_text(encoding="utf-8").splitlines() if line.strip()]
+    prediction_rows = [
+        json.loads(line)
+        for line in PREDICTIONS.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     rows = build_evaluation_rows(annotations, prediction_rows)
     report = evaluate_relation_rows(rows)
     report["evaluation_scope"] = (
         "PMID-disjoint annotation set; relation-rule development sample excluded. Metrics remain descriptive "
         "and depend on the annotator's review. Independent-human status must be stated by the project team."
     )
-    report["model_under_evaluation"] = "pinned BC5CDR candidate extraction + pair-scoped lexical relation/assertion baseline"
-    report["not_measured"] = ["clinical causality", "population-level safety risk", "generalization beyond sampled PubMed records"]
+    report["model_under_evaluation"] = (
+        "pinned BC5CDR candidate extraction + pair-scoped lexical relation/assertion baseline"
+    )
+    report["not_measured"] = [
+        "clinical causality",
+        "population-level safety risk",
+        "generalization beyond sampled PubMed records",
+    ]
     errors = report.pop("errors")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -97,8 +118,17 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
         writer.writerows(errors)
-    print(json.dumps({"candidate_pairs": report["candidate_pairs"], "unique_pmids": report["unique_pmids"],
-                      "by_stratum": report["by_stratum"], "scope": report["evaluation_scope"]}, indent=2))
+    print(
+        json.dumps(
+            {
+                "candidate_pairs": report["candidate_pairs"],
+                "unique_pmids": report["unique_pmids"],
+                "by_stratum": report["by_stratum"],
+                "scope": report["evaluation_scope"],
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

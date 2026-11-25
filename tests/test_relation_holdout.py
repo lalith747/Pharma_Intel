@@ -30,7 +30,16 @@ def test_holdout_sampling_is_repeatable_unique_and_excludes_development_pmids():
 
 def test_blind_review_schema_has_no_prediction_fields():
     assert OUTPUT_COLUMNS == [
-        "relation_id", "sampling_stratum", "pmid", "title", "sentence_index",
-        "drug", "adr", "sentence", "gold_status", "review_status", "annotation_notes",
+        "relation_id",
+        "sampling_stratum",
+        "pmid",
+        "title",
+        "sentence_index",
+        "drug",
+        "adr",
+        "sentence",
+        "gold_status",
+        "review_status",
+        "annotation_notes",
     ]
     assert not any("predict" in column or "score" in column for column in OUTPUT_COLUMNS)

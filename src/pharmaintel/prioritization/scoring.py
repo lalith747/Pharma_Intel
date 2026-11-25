@@ -32,9 +32,7 @@ def rank_safety_signals(evidence_rows: Iterable[dict[str, Any]]) -> list[dict[st
     PMIDs. Co-mentions are excluded. This is a transparent triage score, not a
     probability, effect estimate, incidence, or causal strength.
     """
-    by_pair_pmid: dict[tuple[str, str], dict[str, set[str]]] = defaultdict(
-        lambda: defaultdict(set)
-    )
+    by_pair_pmid: dict[tuple[str, str], dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
     pair_surface: dict[tuple[str, str], tuple[str, str]] = {}
     pair_evidence_counts = defaultdict(int)
     for row in evidence_rows:
@@ -47,8 +45,13 @@ def rank_safety_signals(evidence_rows: Iterable[dict[str, Any]]) -> list[dict[st
         if not drug or not adr or not pmid:
             continue
         key = (drug, adr)
-        pair_surface.setdefault(key, (str(row.get("drug_surface", row.get("drug", ""))),
-                                      str(row.get("adr_surface", row.get("adr", "")))))
+        pair_surface.setdefault(
+            key,
+            (
+                str(row.get("drug_surface", row.get("drug", ""))),
+                str(row.get("adr_surface", row.get("adr", ""))),
+            ),
+        )
         pair_evidence_counts[key] += 1
         if status in RELATION_STATUSES:
             by_pair_pmid[key][pmid].add(status)
@@ -64,7 +67,8 @@ def rank_safety_signals(evidence_rows: Iterable[dict[str, Any]]) -> list[dict[st
         assertion_pmids = len(paper_statuses)
         consistency = (
             (supported + 0.5 * speculative + 0.5 * mixed) / assertion_pmids
-            if assertion_pmids else 0.0
+            if assertion_pmids
+            else 0.0
         )
         score = math.log1p(positive_pmids) * consistency
         drug_surface, adr_surface = pair_surface[key]

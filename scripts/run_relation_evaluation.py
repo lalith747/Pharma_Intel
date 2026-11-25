@@ -23,18 +23,35 @@ def main() -> None:
     report = evaluate_relation_rows(rows)
     errors = report.pop("errors")
     METRICS_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    METRICS_OUTPUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    METRICS_OUTPUT.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     if errors:
         with ERRORS_OUTPUT.open("w", encoding="utf-8-sig", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=list(errors[0]))
             writer.writeheader()
             writer.writerows(errors)
     else:
-        ERRORS_OUTPUT.write_text("relation_id,sample_id,sampling_stratum,pmid,drug,adr,gold_status,predicted_status,predicted_relation_cues,predicted_context_cues,sentence\n", encoding="utf-8")
-    print(json.dumps({key: report[key] for key in (
-        "candidate_pairs", "unique_pmids", "unclear_excluded_overall",
-        "descriptive_all_strata_combined", "by_stratum", "error_count_among_non_unclear",
-    )}, indent=2))
+        ERRORS_OUTPUT.write_text(
+            "relation_id,sample_id,sampling_stratum,pmid,drug,adr,gold_status,predicted_status,predicted_relation_cues,predicted_context_cues,sentence\n",
+            encoding="utf-8",
+        )
+    print(
+        json.dumps(
+            {
+                key: report[key]
+                for key in (
+                    "candidate_pairs",
+                    "unique_pmids",
+                    "unclear_excluded_overall",
+                    "descriptive_all_strata_combined",
+                    "by_stratum",
+                    "error_count_among_non_unclear",
+                )
+            },
+            indent=2,
+        )
+    )
     print(f"Wrote metrics to {METRICS_OUTPUT}")
     print(f"Wrote error analysis to {ERRORS_OUTPUT}")
 

@@ -16,26 +16,42 @@ def load_and_validate_gold(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any
     for row in rows:
         status = str(row.get("review_status", "")).strip()
         if status != "complete":
-            raise ValueError(f"{row.get('sample_id', '<unknown>')}: review_status must be complete.")
+            raise ValueError(
+                f"{row.get('sample_id', '<unknown>')}: review_status must be complete."
+            )
         try:
             entities = json.loads(row.get("gold_entities_json", ""))
         except json.JSONDecodeError as exc:
-            raise ValueError(f"{row.get('sample_id', '<unknown>')}: invalid gold_entities_json.") from exc
+            raise ValueError(
+                f"{row.get('sample_id', '<unknown>')}: invalid gold_entities_json."
+            ) from exc
         if not isinstance(entities, list):
-            raise TypeError(f"{row.get('sample_id', '<unknown>')}: gold annotation must be a JSON list.")
+            raise TypeError(
+                f"{row.get('sample_id', '<unknown>')}: gold annotation must be a JSON list."
+            )
         validated = []
         for entity in entities:
             if not isinstance(entity, dict):
-                raise TypeError(f"{row.get('sample_id', '<unknown>')}: each entity must be an object.")
+                raise TypeError(
+                    f"{row.get('sample_id', '<unknown>')}: each entity must be an object."
+                )
             label = entity.get("label")
             start, end = entity.get("start"), entity.get("end")
             text = entity.get("text")
             if label not in ENTITY_LABELS:
-                raise ValueError(f"{row.get('sample_id', '<unknown>')}: unsupported label {label!r}.")
-            if not isinstance(start, int) or not isinstance(end, int) or not (0 <= start < end <= len(row["sentence"])):
+                raise ValueError(
+                    f"{row.get('sample_id', '<unknown>')}: unsupported label {label!r}."
+                )
+            if (
+                not isinstance(start, int)
+                or not isinstance(end, int)
+                or not (0 <= start < end <= len(row["sentence"]))
+            ):
                 raise ValueError(f"{row.get('sample_id', '<unknown>')}: invalid entity offsets.")
             if row["sentence"][start:end] != text:
-                raise ValueError(f"{row.get('sample_id', '<unknown>')}: span text does not match offsets.")
+                raise ValueError(
+                    f"{row.get('sample_id', '<unknown>')}: span text does not match offsets."
+                )
             validated.append((start, end, label))
         gold_rows.append({**row, "gold_spans": set(validated)})
     if not gold_rows:
@@ -43,7 +59,9 @@ def load_and_validate_gold(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any
     return gold_rows
 
 
-def exact_span_metrics(gold: Iterable[tuple[int, int, str]], predicted: Iterable[tuple[int, int, str]]) -> dict[str, Any]:
+def exact_span_metrics(
+    gold: Iterable[tuple[int, int, str]], predicted: Iterable[tuple[int, int, str]]
+) -> dict[str, Any]:
     """Calculate exact-boundary precision, recall, and F1 for one label set."""
     gold_set, predicted_set = set(gold), set(predicted)
     tp = len(gold_set & predicted_set)
@@ -52,7 +70,11 @@ def exact_span_metrics(gold: Iterable[tuple[int, int, str]], predicted: Iterable
     support = len(gold_set)
     precision = tp / (tp + fp) if tp + fp else (0.0 if support else None)
     recall = tp / support if support else None
-    f1 = (2 * precision * recall / (precision + recall)) if precision is not None and recall is not None and precision + recall else (0.0 if support and precision is not None else None)
+    f1 = (
+        (2 * precision * recall / (precision + recall))
+        if precision is not None and recall is not None and precision + recall
+        else (0.0 if support and precision is not None else None)
+    )
     return {
         "support": support,
         "predicted": len(predicted_set),

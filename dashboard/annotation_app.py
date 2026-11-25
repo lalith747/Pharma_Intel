@@ -54,8 +54,15 @@ if not annotation_path.exists():
 
 frame = pd.read_csv(annotation_path, encoding="utf-8-sig", keep_default_na=False)
 required_columns = {
-    "sample_id", "sampling_stratum", "pmid", "sentence", "title", "abstract_context",
-    "gold_entities_json", "annotator_notes", "review_status",
+    "sample_id",
+    "sampling_stratum",
+    "pmid",
+    "sentence",
+    "title",
+    "abstract_context",
+    "gold_entities_json",
+    "annotator_notes",
+    "review_status",
 }
 if missing := required_columns - set(frame.columns):
     st.error(f"CSV is missing required columns: {', '.join(sorted(missing))}")
@@ -84,9 +91,7 @@ with previous_col:
         st.session_state.annotation_row_index -= 1
         st.rerun()
 with next_col:
-    if st.button(
-        "Next →", disabled=st.session_state.annotation_row_index >= len(frame) - 1
-    ):
+    if st.button("Next →", disabled=st.session_state.annotation_row_index >= len(frame) - 1):
         st.session_state.annotation_row_index += 1
         st.rerun()
 
@@ -123,9 +128,11 @@ with st.form(f"add_entity_{sample_id}", clear_on_submit=True):
         occurrence = st.selectbox(
             "Occurrence",
             options=list(range(len(occurrences))) or [0],
-            format_func=lambda index: f"{index + 1} ({occurrences[index][0]}:{occurrences[index][1]})"
-            if occurrences
-            else "No match",
+            format_func=lambda index: (
+                f"{index + 1} ({occurrences[index][0]}:{occurrences[index][1]})"
+                if occurrences
+                else "No match"
+            ),
         )
     with add_col:
         st.write("")
@@ -149,8 +156,7 @@ if entities:
                 st.rerun()
         with span_col:
             st.write(
-                f"`{entity['label']}` · **{entity['text']}** · "
-                f"{entity['start']}:{entity['end']}"
+                f"`{entity['label']}` · **{entity['text']}** · {entity['start']}:{entity['end']}"
             )
 else:
     st.info("No spans added. Mark the sentence as reviewed with no entities if that is correct.")

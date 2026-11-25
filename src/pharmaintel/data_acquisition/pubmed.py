@@ -75,9 +75,7 @@ def _publication_date(article: dict[str, Any]) -> str:
     article_dates = article.get("ArticleDate", [])
     if article_dates:
         first = article_dates[0]
-        return "-".join(
-            _text(first.get(key)) for key in ("Year", "Month", "Day") if first.get(key)
-        )
+        return "-".join(_text(first.get(key)) for key in ("Year", "Month", "Day") if first.get(key))
     return ""
 
 
@@ -162,7 +160,9 @@ def normalize_pubmed_article(item: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def fetch_pubmed_records(pmids: Iterable[str], batch_size: int = DEFAULT_BATCH_SIZE) -> list[dict[str, Any]]:
+def fetch_pubmed_records(
+    pmids: Iterable[str], batch_size: int = DEFAULT_BATCH_SIZE
+) -> list[dict[str, Any]]:
     """Fetch and normalize PMIDs in batches to keep requests bounded."""
     ids = [str(pmid) for pmid in pmids]
     if batch_size < 1:
@@ -174,7 +174,9 @@ def fetch_pubmed_records(pmids: Iterable[str], batch_size: int = DEFAULT_BATCH_S
             with Entrez.efetch(db="pubmed", id=",".join(batch), retmode="xml") as handle:
                 response = Entrez.read(handle)
         except Exception as exc:
-            raise PubMedError(f"PubMed fetch failed for batch starting at PMID {batch[0]}: {exc}") from exc
+            raise PubMedError(
+                f"PubMed fetch failed for batch starting at PMID {batch[0]}: {exc}"
+            ) from exc
         for item in [*response.get("PubmedArticle", []), *response.get("PubmedBookArticle", [])]:
             record = normalize_pubmed_article(item)
             if record:
@@ -200,8 +202,22 @@ def deduplicate_records(records: Iterable[dict[str, Any]]) -> tuple[list[dict[st
 
 
 _ABBREVIATIONS = (
-    "e.g.", "i.e.", "et al.", "vs.", "resp.", "Fig.", "Figs.", "Eq.", "No.", "Dr.",
-    "Prof.", "St.", "U.S.", "U.K.", "a.m.", "p.m.",
+    "e.g.",
+    "i.e.",
+    "et al.",
+    "vs.",
+    "resp.",
+    "Fig.",
+    "Figs.",
+    "Eq.",
+    "No.",
+    "Dr.",
+    "Prof.",
+    "St.",
+    "U.S.",
+    "U.K.",
+    "a.m.",
+    "p.m.",
 )
 _ABBREVIATION_PATTERN = re.compile(
     r"(?<!\w)(?:" + "|".join(re.escape(item) for item in _ABBREVIATIONS) + r")",
@@ -221,12 +237,16 @@ def split_sentences(text: str) -> list[str]:
     if not normalized:
         return []
     marker = "\ue000"
-    protected = _ABBREVIATION_PATTERN.sub(lambda match: match.group().replace(".", marker), normalized)
+    protected = _ABBREVIATION_PATTERN.sub(
+        lambda match: match.group().replace(".", marker), normalized
+    )
     sentences = [part.strip().replace(marker, ".") for part in _SENTENCE_BOUNDARY.split(protected)]
     return [sentence for sentence in sentences if sentence]
 
 
-def build_sentence_rows(records: Iterable[dict[str, Any]], query: str, retrieved_at: str) -> list[dict[str, Any]]:
+def build_sentence_rows(
+    records: Iterable[dict[str, Any]], query: str, retrieved_at: str
+) -> list[dict[str, Any]]:
     """Create sentence rows that retain article identifiers and search provenance."""
     rows: list[dict[str, Any]] = []
     for record in records:
@@ -301,8 +321,15 @@ def run_pipeline(
     )
     pd.DataFrame(records).to_csv(processed_path / "pubmed_records.csv", index=False)
     sentence_columns = [
-        "pmid", "record_type", "sentence_index", "sentence", "title", "journal", "publication_date",
-        "query", "retrieved_at_utc",
+        "pmid",
+        "record_type",
+        "sentence_index",
+        "sentence",
+        "title",
+        "journal",
+        "publication_date",
+        "query",
+        "retrieved_at_utc",
     ]
     pd.DataFrame(sentence_rows, columns=sentence_columns).to_csv(
         processed_path / "pubmed_sentences.csv", index=False
@@ -312,13 +339,21 @@ def run_pipeline(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--query", default=DEFAULT_QUERY, help="PubMed query (default: case study).")
-    parser.add_argument("--max-results", type=int, default=100, help="Maximum PMIDs to retrieve (1–10000).")
+    parser.add_argument(
+        "--query", default=DEFAULT_QUERY, help="PubMed query (default: case study)."
+    )
+    parser.add_argument(
+        "--max-results", type=int, default=100, help="Maximum PMIDs to retrieve (1–10000)."
+    )
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
     parser.add_argument("--raw-dir", default="data/raw/pubmed")
     parser.add_argument("--processed-dir", default="data/processed/pubmed")
-    parser.add_argument("--email", default=None, help="Contact email; may also be set with NCBI_EMAIL.")
-    parser.add_argument("--api-key", default=None, help="NCBI API key; may also be set with NCBI_API_KEY.")
+    parser.add_argument(
+        "--email", default=None, help="Contact email; may also be set with NCBI_EMAIL."
+    )
+    parser.add_argument(
+        "--api-key", default=None, help="NCBI API key; may also be set with NCBI_API_KEY."
+    )
     args = parser.parse_args(argv)
     if not (args.email or os.getenv("NCBI_EMAIL")):
         print("Note: set NCBI_EMAIL to identify this client to NCBI.", file=sys.stderr)

@@ -60,7 +60,9 @@ def validate_generated_outputs(
 
     loaded = nx.read_graphml(graph_path)
     evidence_nodes = [
-        (node, data) for node, data in loaded.nodes(data=True) if data.get("node_type") == "evidence"
+        (node, data)
+        for node, data in loaded.nodes(data=True)
+        if data.get("node_type") == "evidence"
     ]
     if len(evidence_nodes) != len(evidence):
         raise ValueError("GraphML round-trip changed the evidence-node count.")
@@ -70,7 +72,9 @@ def validate_generated_outputs(
         if len(outgoing) != 3 or relations != {"mentions_drug", "mentions_event", "published_in"}:
             raise ValueError(f"Evidence node {node} is missing a provenance edge.")
         if not data.get("pmid") or not data.get("sentence"):
-            raise ValueError(f"Evidence node {node} lost source provenance during GraphML round-trip.")
+            raise ValueError(
+                f"Evidence node {node} lost source provenance during GraphML round-trip."
+            )
     if len(evidence) and not evidence_nodes:
         raise ValueError("The generated graph has no evidence nodes.")
     return {

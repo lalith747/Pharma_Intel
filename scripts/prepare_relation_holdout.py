@@ -22,23 +22,45 @@ PREDICTIONS = ROOT / "data/processed/pubmed/bc5cdr_ner_predictions.jsonl"
 OUTPUT = ROOT / "data/annotated/relation_holdout_sample.csv"
 MANIFEST = ROOT / "data/annotated/relation_holdout_manifest.json"
 RANDOM_SEED = 42017
-TARGET_ADRS = {"neutropenia", "neutropenic", "agranulocytosis", "granulocytopenia", "leukopenia", "leucopenia"}
+TARGET_ADRS = {
+    "neutropenia",
+    "neutropenic",
+    "agranulocytosis",
+    "granulocytopenia",
+    "leukopenia",
+    "leucopenia",
+}
 OUTPUT_COLUMNS = [
-    "relation_id", "sampling_stratum", "pmid", "title", "sentence_index",
-    "drug", "adr", "sentence", "gold_status", "review_status", "annotation_notes",
+    "relation_id",
+    "sampling_stratum",
+    "pmid",
+    "title",
+    "sentence_index",
+    "drug",
+    "adr",
+    "sentence",
+    "gold_status",
+    "review_status",
+    "annotation_notes",
 ]
 
 
-def make_candidates(sentence_rows: list[dict[str, Any]], prediction_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def make_candidates(
+    sentence_rows: list[dict[str, Any]], prediction_rows: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
     """Join entities by row order, form model candidate pairs, keep one per PMID."""
     if len(sentence_rows) != len(prediction_rows):
         raise ValueError("Sentence and prediction rows have different lengths.")
     by_pmid: dict[str, list[dict[str, Any]]] = {}
     for source, prediction in zip(sentence_rows, prediction_rows, strict=True):
         text = str(source["sentence"])
-        if text != str(prediction.get("sentence", "")) or str(source["pmid"]) != str(prediction.get("pmid", "")):
+        if text != str(prediction.get("sentence", "")) or str(source["pmid"]) != str(
+            prediction.get("pmid", "")
+        ):
             raise ValueError("Sentence/prediction alignment check failed.")
-        for relation in extract_sentence_relations(text, prediction.get("entities", []), use_case_study_lexicon=False):
+        for relation in extract_sentence_relations(
+            text, prediction.get("entities", []), use_case_study_lexicon=False
+        ):
             candidate = {
                 "pmid": str(source["pmid"]),
                 "title": str(source.get("title", "")),
@@ -49,17 +71,27 @@ def make_candidates(sentence_rows: list[dict[str, Any]], prediction_rows: list[d
             }
             by_pmid.setdefault(candidate["pmid"], []).append(candidate)
     # Deterministic candidate choice per PMID; never include model outputs/cues.
-    return [min(rows, key=lambda r: (r["sentence_index"], r["drug"].casefold(), r["adr"].casefold()))
-            for _, rows in sorted(by_pmid.items())]
+    return [
+        min(rows, key=lambda r: (r["sentence_index"], r["drug"].casefold(), r["adr"].casefold()))
+        for _, rows in sorted(by_pmid.items())
+    ]
 
 
 def sample_candidates(
-    candidates: list[dict[str, Any]], excluded_pmids: set[str], *, target_n: int = 30,
-    random_n: int = 30, seed: int = RANDOM_SEED,
+    candidates: list[dict[str, Any]],
+    excluded_pmids: set[str],
+    *,
+    target_n: int = 30,
+    random_n: int = 30,
+    seed: int = RANDOM_SEED,
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
     eligible = [row for row in candidates if row["pmid"] not in excluded_pmids]
-    target = [row for row in eligible if row["drug"].casefold().strip() in {"clozapine", "clozaril", "leponex"}
-              and row["adr"].casefold().strip() in TARGET_ADRS]
+    target = [
+        row
+        for row in eligible
+        if row["drug"].casefold().strip() in {"clozapine", "clozaril", "leponex"}
+        and row["adr"].casefold().strip() in TARGET_ADRS
+    ]
     target_ids = {row["pmid"] for row in target}
     rng = random.Random(seed)
     target_pick = rng.sample(target, min(target_n, len(target)))
@@ -69,8 +101,10 @@ def sample_candidates(
     result.extend(dict(row, sampling_stratum="random_article") for row in random_pick)
     rng.shuffle(result)
     return result, {
-        "eligible_unique_pmids": len(eligible), "target_candidate_pmids": len(target),
-        "target_selected": len(target_pick), "random_pool_pmids": len(random_pool),
+        "eligible_unique_pmids": len(eligible),
+        "target_candidate_pmids": len(target),
+        "target_selected": len(target_pick),
+        "random_pool_pmids": len(random_pool),
         "random_selected": len(random_pick),
     }
 
@@ -83,7 +117,11 @@ def main() -> None:
         dev_rows = list(csv.DictReader(handle))
     excluded = {str(row["pmid"]) for row in dev_rows}
     frame = pd.read_csv(SENTENCES, dtype={"pmid": str}, keep_default_na=False)
-    prediction_rows = [json.loads(line) for line in PREDICTIONS.read_text(encoding="utf-8").splitlines() if line.strip()]
+    prediction_rows = [
+        json.loads(line)
+        for line in PREDICTIONS.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     candidates = make_candidates(frame.to_dict(orient="records"), prediction_rows)
     selected, counts = sample_candidates(candidates, excluded)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
@@ -91,11 +129,21 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
         for index, row in enumerate(selected, start=1):
-            writer.writerow({
-                "relation_id": f"HOLDOUT{index:03d}",
-                **{key: row[key] for key in OUTPUT_COLUMNS if key in row and key not in {"relation_id", "gold_status", "review_status", "annotation_notes"}},
-                "gold_status": "", "review_status": "pending", "annotation_notes": "",
-            })
+            writer.writerow(
+                {
+                    "relation_id": f"HOLDOUT{index:03d}",
+                    **{
+                        key: row[key]
+                        for key in OUTPUT_COLUMNS
+                        if key in row
+                        and key
+                        not in {"relation_id", "gold_status", "review_status", "annotation_notes"}
+                    },
+                    "gold_status": "",
+                    "review_status": "pending",
+                    "annotation_notes": "",
+                }
+            )
     written = pd.read_csv(OUTPUT, dtype={"pmid": str}, keep_default_na=False)
     if written["pmid"].duplicated().any() or set(written["pmid"]) & excluded:
         raise RuntimeError("Holdout PMID uniqueness/disjointness check failed.")
