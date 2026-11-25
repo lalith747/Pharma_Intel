@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="PharmaIntel-AI: AI-powered pharmacovigilance intelligence from biomedical literature" xmlns:c2pa="http://c2pa.org/manifest">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f000c"/>
+      <stop offset="0.55" stop-color="#34001a"/>
+      <stop offset="1" stop-color="#4a0022"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#bedffe"/>
+      <stop offset="0.5" stop-color="#fff3a9"/>
+      <stop offset="1" stop-color="#ffa600"/>
+    </linearGradient>
+    <linearGradient id="scan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#bedffe" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#bedffe" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#bedffe" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffa600" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#fff3a9" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#bedffe" stroke-opacity="0.07" stroke-width="1"/>
+      <animateTransform attributeName="patternTransform" type="translate" from="0 0" to="40 40" dur="6s" repeatCount="indefinite"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <path id="p1" d="M780 190 L880 95 L1000 170"/>
+    <path id="p2" d="M1000 170 L1100 105 L1110 240"/>
+    <path id="p3" d="M780 190 L920 255 L1110 240"/>
+    <clipPath id="clip"><rect width="1200" height="340" rx="18"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect width="1200" height="340" fill="url(#bg)"/>
+    <rect width="1200" height="340" fill="url(#grid)"/>
+
+    <circle cx="260" cy="60" r="220" fill="url(#orb)">
+      <animate attributeName="cx" values="260;420;260" dur="14s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1000" cy="300" r="240" fill="url(#orb)" opacity="0.7">
+      <animate attributeName="cx" values="1000;860;1000" dur="16s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- evidence network -->
+    <g stroke="url(#accent)" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.75">
+      <use xlink:href="#p1" stroke-dasharray="6 8"><animate attributeName="stroke-dashoffset" from="0" to="-56" dur="3s" repeatCount="indefinite"/></use>
+      <use xlink:href="#p2" stroke-dasharray="6 8"><animate attributeName="stroke-dashoffset" from="0" to="-56" dur="3.6s" repeatCount="indefinite"/></use>
+      <use xlink:href="#p3" stroke-dasharray="6 8"><animate attributeName="stroke-dashoffset" from="0" to="-56" dur="4.2s" repeatCount="indefinite"/></use>
+      <path d="M880 95 L920 255" stroke-opacity="0.35" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-40" dur="5s" repeatCount="indefinite"/></path>
+      <path d="M1000 170 L920 255" stroke-opacity="0.35" stroke-dasharray="3 7"><animate attributeName="stroke-dashoffset" from="0" to="-40" dur="5s" repeatCount="indefinite"/></path>
+    </g>
+
+    <g filter="url(#glow)">
+      <circle r="4" fill="#bedffe"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath xlink:href="#p1"/></animateMotion></circle>
+      <circle r="4" fill="#fff3a9"><animateMotion dur="3.8s" begin="0.6s" repeatCount="indefinite"><mpath xlink:href="#p2"/></animateMotion></circle>
+      <circle r="4" fill="#ffa600"><animateMotion dur="4.4s" begin="1.2s" repeatCount="indefinite"><mpath xlink:href="#p3"/></animateMotion></circle>
+    </g>
+
+    <g>
+      <g transform="translate(780 190)">
+        <circle r="16" fill="none" stroke="#bedffe" stroke-width="1.5"><animate attributeName="r" values="12;30;12" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/></circle>
+        <circle r="11" fill="#bedffe" filter="url(#glow)"/>
+        <text x="0" y="-26" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#bedffe">DRUG</text>
+      </g>
+      <g transform="translate(1000 170)">
+        <circle r="16" fill="none" stroke="#ffa600" stroke-width="1.5"><animate attributeName="r" values="12;30;12" dur="3s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.8;0;0.8" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+        <circle r="11" fill="#ffa600" filter="url(#glow)"/>
+        <text x="0" y="-26" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12" fill="#ffd27a">ADR</text>
+      </g>
+      <circle cx="880" cy="95" r="8" fill="#fff3a9" filter="url(#glow)"><animate attributeName="r" values="6;9;6" dur="2.4s" repeatCount="indefinite"/></circle>
+      <circle cx="1100" cy="105" r="7" fill="#fff3a9" filter="url(#glow)"><animate attributeName="r" values="5;8;5" dur="2.8s" repeatCount="indefinite"/></circle>
+      <circle cx="920" cy="255" r="8" fill="#fff3a9" filter="url(#glow)"><animate attributeName="r" values="6;9;6" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="1110" cy="240" r="7" fill="#fff3a9" filter="url(#glow)"><animate attributeName="r" values="5;8;5" dur="2.6s" repeatCount="indefinite"/></circle>
+      <g font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#fff3a9">
+        <text x="880" y="78" text-anchor="middle">PMID</text>
+        <text x="1100" y="88" text-anchor="middle">PMID</text>
+        <text x="920" y="280" text-anchor="middle">sentence</text>
+        <text x="1110" y="266" text-anchor="middle">PMID</text>
+      </g>
+    </g>
+
+    <!-- title block -->
+    <g font-family="'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif">
+      <g>
+        <text x="60" y="64" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="14" letter-spacing="4" fill="#bedffe">
+          LITERATURE MINING  /  PHARMACOVIGILANCE
+          <animate attributeName="opacity" values="0;1" dur="1s" fill="freeze"/>
+        </text>
+      </g>
+      <text x="58" y="150" font-size="76" font-weight="800" fill="url(#accent)" letter-spacing="-1">
+        PharmaIntel-AI
+        <animate attributeName="opacity" values="0;1" dur="1.2s" begin="0.2s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="translate" values="0 24;0 0" dur="1.2s" begin="0.2s" fill="freeze"/>
+      </text>
+      <text x="62" y="196" font-size="22" fill="#f1e3cf" opacity="0">
+        AI-powered pharmacovigilance intelligence from biomedical literature.
+        <animate attributeName="opacity" values="0;1" dur="1s" begin="1s" fill="freeze"/>
+      </text>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1" dur="1s" begin="1.6s" fill="freeze"/>
+        <rect x="60" y="232" width="118" height="30" rx="15" fill="none" stroke="#bedffe" stroke-opacity="0.6"/>
+        <text x="119" y="252" text-anchor="middle" font-size="13" fill="#bedffe">PubMed</text>
+        <rect x="190" y="232" width="96" height="30" rx="15" fill="none" stroke="#fff3a9" stroke-opacity="0.6"/>
+        <text x="238" y="252" text-anchor="middle" font-size="13" fill="#fff3a9">NER</text>
+        <rect x="298" y="232" width="156" height="30" rx="15" fill="none" stroke="#ffa600" stroke-opacity="0.6"/>
+        <text x="376" y="252" text-anchor="middle" font-size="13" fill="#ffd27a">Relation extraction</text>
+        <rect x="466" y="232" width="140" height="30" rx="15" fill="none" stroke="#bedffe" stroke-opacity="0.6"/>
+        <text x="536" y="252" text-anchor="middle" font-size="13" fill="#bedffe">Knowledge graph</text>
+        <rect x="618" y="232" width="104" height="30" rx="15" fill="none" stroke="#fff3a9" stroke-opacity="0.6"/>
+        <text x="670" y="252" text-anchor="middle" font-size="13" fill="#fff3a9">Streamlit</text>
+      </g>
+    </g>
+
+    <!-- scan line -->
+    <rect y="0" width="140" height="340" fill="url(#scan)">
+      <animate attributeName="x" values="-140;1200" dur="7s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- border -->
+    <rect x="1" y="1" width="1198" height="338" rx="17" fill="none" stroke="url(#accent)" stroke-opacity="0.55" stroke-width="1.5"/>
+    <rect x="0" y="336" width="1200" height="4" fill="url(#accent)">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTphZTM4YzlmZC00YzhiLTRjZDQtOTkyYy1iNmUzNDE4NjlmYjIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaLH70w7q64AL1Cx3fXZEUZwAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpiNjk4NjJjZi1iMmQ0LTRmYmMtYTE0OS01MTMwZmMxYTc3ZTNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNouCLFAvNYioNdhMUrhVKfdQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgglpZyZ0v2R8s2r2zFewYO5QqDKlC+/uNzlgH3KOo48ZKkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaOoiVgwstNQXoz6j6hCS8KoAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYILSiQuz7EC22NCdsirmnXQgkN1zBHMbQJHtFlOFfTaENZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GSKEZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmFlMzhjOWZkLTRjOGItNGNkNC05OTJjLWI2ZTM0MTg2OWZiMi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjJiOTNmYWI5LTIzM2UtNDU4OS1iMzZkLTY0Y2E3ODljMGEyY3JjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCWlnJnS/ZHyzavbMV7Bg7lCoMqUL7+43OWAfco6jjxkqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggRtwFYrXlOZ1+EIWODKvmPLNUTmhGTk6n07A+Q22/guaiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggcVdi8EpPVpk2t8/BK60l/HzBz2Jg4u8aa9BFVV0O1xp0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQCblKxf3T/XnDBlVEZDbTLLkDmgAIIpNhOEJ7Dlk9bcdmZ9hZhIci1v8BtiyFZ3KS2bqUPHPBHVlQY0QKsQ0NJ0=</c2pa:manifest></metadata></svg>
