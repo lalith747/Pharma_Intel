@@ -12,9 +12,9 @@ sys.path.insert(0, str(ROOT))
 
 from dashboard.shared import render_live_pubmed_banner
 
-st.set_page_config(page_title="PharmaIntel | Safety Intelligence", page_icon="", layout="wide")
+st.set_page_config(page_title="PharmaIntel | Safety Intelligence", page_icon="🧬", layout="wide")
 st.markdown(
- """
+    """
 <style>
 :root { --blue:#BDE0FF; --yellow:#FFF2A7; --orange:#FFA500; --wine:#930031; --ink:#24151B; --muted:#715D65; --paper:#FFFCF6; }
 .stApp { background: radial-gradient(ellipse at 85% 0%, #fff2a73b 0, transparent 32%), var(--paper); color:var(--ink); }
@@ -41,19 +41,19 @@ div.stButton > button:hover, div.stDownloadButton > button:hover { background:va
 <h1>From biomedical evidence<br>to explainable safety insight.</h1>
 <p>Traceable literature signals for clozapine and blood-cell events. Explore what the model found, inspect the source sentence, and see the limits alongside every score.</p></div>
 """,
- unsafe_allow_html=True,
+    unsafe_allow_html=True,
 )
 
 pages = [
- st.Page("pages/overview.py", title="Overview", icon="", default=True),
- st.Page("pages/signals.py", title="Safety signals", icon=""),
- st.Page("pages/evidence.py", title="Evidence explorer", icon=""),
- st.Page("pages/knowledge_graph.py", title="Knowledge graph", icon=""),
- st.Page("pages/socialpulse.py", title="SocialPulse", icon=""),
- st.Page("pages/methods.py", title="Methods & limits", icon=""),
+    st.Page("pages/overview.py", title="Overview", icon="🏠", default=True),
+    st.Page("pages/signals.py", title="Safety signals", icon="📊"),
+    st.Page("pages/evidence.py", title="Evidence explorer", icon="🔎"),
+    st.Page("pages/knowledge_graph.py", title="Knowledge graph", icon="🕸️"),
+    st.Page("pages/socialpulse.py", title="SocialPulse", icon="📣"),
+    st.Page("pages/methods.py", title="Methods & limits", icon="📘"),
 ]
 render_live_pubmed_banner()
 nav = st.navigation(pages, position="sidebar")
-st.sidebar.markdown("### PharmaIntel")
+st.sidebar.markdown("### 🧬 PharmaIntel")
 st.sidebar.caption("AI-powered safety intelligence")
 nav.run()
