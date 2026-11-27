@@ -29,6 +29,8 @@
 
 # PharmaIntel-AI
 
+**Live dashboard:** [PharmaIntel Safety Intelligence](https://pharmaintel.streamlit.app/)
+
 **AI-powered pharmacovigilance intelligence from biomedical literature.**
 
 > PharmaIntel-AI is a research and portfolio project for retrieving PubMed literature, extracting drug and adverse-event mentions, analysing their sentence-level relationships, and prioritizing traceable evidence for review. It is a literature-mining aid; it does not establish clinical causality or replace pharmacovigilance review.
